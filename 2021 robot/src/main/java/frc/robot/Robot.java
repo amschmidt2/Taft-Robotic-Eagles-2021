@@ -6,12 +6,17 @@ package frc.robot;
 
 import static edu.wpi.first.wpilibj.Timer.delay;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
-import com.analog.adis16470.frc.ADIS16470_IMU;
-  
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.PWMSparkMax;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -20,33 +25,33 @@ import com.analog.adis16470.frc.ADIS16470_IMU;
  * creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot {
-  private static final double kAngleSetpoint = 0.0;
-	private static final double kP = 0.005; // propotional turning constant
+public class gyrov1 extends TimedRobot {
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
    */
 
-  private static final double kVoltsPerDegreePerSecond = 0.0128;
+  private Jaguar leftMotor = new Jaguar(0);
+  private Jaguar rightMotor = new Jaguar(1);
 
-  private static final int kLeftMotorPort = 0;
-	private static final int kRightMotorPort = 1;
-  private static final int kJoystickPort = 0;
-  
-  private DifferentialDrive m_myRobot
-			= new DifferentialDrive(new Spark(kLeftMotorPort),
-			new Spark(kRightMotorPort));
-	private AnalogGyro m_gyro = new AnalogGyro(kGyroPort);
-	private Joystick m_joystick = new Joystick(kJoystickPort);
+  private PWMSparkMax leftshooter = new PWMSparkMax(2);
+    private PWMSparkMax rightshooter = new PWMSparkMax(3);
 
- 
+  double kP = 1;
+
+  private DifferentialDrive minibot = new DifferentialDrive(leftMotor, rightMotor);
+
+  private Gyro gyro = new ADXRS450_Gyro(SPI.Port.kMXP);
+
+  private Joystick joy1 = new Joystick(0);
 
   private double startTime;
-  public static final ADIS16470_IMU imu = new ADIS16470_IMU();
 
   @Override
   public void robotInit() {
+    // Places a compass indicator for the gyro heading on the dashboard
+    // Explicit down-cast required because Gyro does not extend Sendable
+    Shuffleboard.getTab("gyro").add((Sendable) gyro);
   }
 
   @Override
@@ -105,11 +110,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-
-    double turningValue = (kAngleSetpoint - imu.getAngle()) * kP;
-		// Invert the direction of the turn if we are going backwards
-		turningValue = Math.copySign(turningValue, m_joystick.getY());
-		m_myRobot.arcadeDrive(m_joystick.getY(), turningValue);
+    double shooterspeed = -joy1.getRawAxis(5) * 1;
     
     double speed = -joy1.getRawAxis(1) * 0.6;
     double turn = -joy1.getRawAxis(0) * 0.3;
@@ -119,6 +120,9 @@ public class Robot extends TimedRobot {
 
     leftMotor.set(left);
     rightMotor.set(right);
+
+    leftshooter.set(shooterspeed);
+    rightshooter.set(shooterspeed);
 
   }
 
