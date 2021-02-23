@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.PWMSparkMax;
  * creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class gyrov1 extends TimedRobot {
+public class Robot extends TimedRobot {
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
