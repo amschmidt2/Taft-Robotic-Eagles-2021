@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 
-
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -23,7 +22,7 @@ public class Robot extends TimedRobot {
    */
 
   private Spark leftMotor1 = new Spark(0);
-  private Spark rightMotor1 = new Spark(1);
+  private Spark rightMotor1 = new Spark(2);
 
   private Joystick joy1 = new Joystick(0);
 
