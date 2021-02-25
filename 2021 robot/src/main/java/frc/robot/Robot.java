@@ -4,14 +4,16 @@
 
 package frc.robot;
 
-import static edu.wpi.first.wpilibj.Timer.delay;
+//import static edu.wpi.first.wpilibj.Timer.delay;
 
-import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
-import com.analog.adis16470.frc.ADIS16470_IMU;
-  
+//import edu.wpi.first.wpilibj.Timer;
+
+import edu.wpi.first.wpilibj.PWMSparkMax;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -21,29 +23,22 @@ import com.analog.adis16470.frc.ADIS16470_IMU;
  * project.
  */
 public class Robot extends TimedRobot {
-  private static final double kAngleSetpoint = 0.0;
-	private static final double kP = 0.005; // propotional turning constant
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
    */
 
-  private static final double kVoltsPerDegreePerSecond = 0.0128;
+  private CANSparkMax leftMotor = new CANSparkMax(1, MotorType.kBrushless);
+  private CANSparkMax rightMotor = new CANSparkMax(2, MotorType.kBrushless);
 
-  private static final int kLeftMotorPort = 0;
-	private static final int kRightMotorPort = 1;
-  private static final int kJoystickPort = 0;
-  
-  private DifferentialDrive m_myRobot
-			= new DifferentialDrive(new Spark(kLeftMotorPort),
-			new Spark(kRightMotorPort));
-	private AnalogGyro m_gyro = new AnalogGyro(kGyroPort);
-	private Joystick m_joystick = new Joystick(kJoystickPort);
+  private DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor);
 
- 
+  private Joystick joy1 = new Joystick(0);
 
-  private double startTime;
-  public static final ADIS16470_IMU imu = new ADIS16470_IMU();
+  private PWMSparkMax leftshooter = new PWMSparkMax(2);
+  private PWMSparkMax rightshooter = new PWMSparkMax(3);
+
+  //private double startTime;
 
   @Override
   public void robotInit() {
@@ -55,13 +50,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    startTime = Timer.getFPGATimestamp();
-    rightMotor.setInverted(true);
+    //startTime = Timer.getFPGATimestamp();
   }
 
   @Override
   public void autonomousPeriodic() {
-    double DELAY_TIME = 1;
+    /*double DELAY_TIME = 1;
     
     double time = Timer.getFPGATimestamp();
 
@@ -77,9 +71,11 @@ public class Robot extends TimedRobot {
     rightMotor.set(0);
   }
 
+  delay(DELAY_TIME);
+
   if ((time - startTime > 6) && (time -startTime < 11 )) {
     leftMotor.set(0.6);
-    rightMotor.set(0.1);
+    rightMotor.set(0);
   }
 
   /*if (time - startTime < 13) {
@@ -90,26 +86,25 @@ public class Robot extends TimedRobot {
   if (time - startTime <14) {
     leftMotor.set(0.3);
     rightMotor.set(0.6);    
-  }*/
+  }
 
     else {
     leftMotor.set(0);
     rightMotor.set(0);
-    }
+    }*/
   }
 
   @Override
   public void teleopInit() {
-    rightMotor.setInverted(true);
+    leftshooter.setInverted(true);
   }
 
   @Override
   public void teleopPeriodic() {
+    boolean shooterspeed = joy1.getRawButton(2);
 
-    double turningValue = (kAngleSetpoint - imu.getAngle()) * kP;
-		// Invert the direction of the turn if we are going backwards
-		turningValue = Math.copySign(turningValue, m_joystick.getY());
-		m_myRobot.arcadeDrive(m_joystick.getY(), turningValue);
+    double flywheel = 0.4;
+    double flywheelstop = 0;
     
     double speed = -joy1.getRawAxis(1) * 0.6;
     double turn = -joy1.getRawAxis(0) * 0.3;
@@ -117,9 +112,17 @@ public class Robot extends TimedRobot {
     double left = speed + turn;
     double right = speed - turn;
 
-    leftMotor.set(left);
-    rightMotor.set(right);
+    drivechain.tankDrive(-left, right);
 
+    if (shooterspeed) {
+      leftshooter.set(flywheel);
+      rightshooter.set(flywheel);
+    }
+
+    else {
+      leftshooter.set(flywheelstop);
+      rightshooter.set(flywheelstop);
+    }
   }
 
   @Override
