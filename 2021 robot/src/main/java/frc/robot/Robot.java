@@ -6,18 +6,14 @@ package frc.robot;
 
 //import static edu.wpi.first.wpilibj.Timer.delay;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PWMSparkMax;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.Sendable;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import static edu.wpi.first.wpilibj.Timer.delay;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -42,14 +38,10 @@ public class Robot extends TimedRobot {
   private PWMSparkMax leftshooter = new PWMSparkMax(2);
   private PWMSparkMax rightshooter = new PWMSparkMax(3);
 
-  //private double startTime;
+  private double startTime;
 
   @Override
-  public void robotInit() {
-    // Places a compass indicator for the gyro heading on the dashboard
-    // Explicit down-cast required because Gyro does not extend Sendable
-    Shuffleboard.getTab("gyro").add((Sendable) gyro);
-  }
+  public void robotInit() {}
 
   @Override
   public void robotPeriodic() {
@@ -57,12 +49,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    //startTime = Timer.getFPGATimestamp();
+    startTime = Timer.getFPGATimestamp();
   }
 
   @Override
   public void autonomousPeriodic() {
-    /*double DELAY_TIME = 1;
+    double DELAY_TIME = 1;
     
     double time = Timer.getFPGATimestamp();
 
@@ -79,6 +71,7 @@ public class Robot extends TimedRobot {
   }
 
   delay(DELAY_TIME);
+
   if ((time - startTime > 6) && (time -startTime < 11 )) {
     leftMotor.set(0.6);
     rightMotor.set(0);
