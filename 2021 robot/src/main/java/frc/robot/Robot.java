@@ -6,8 +6,9 @@ package frc.robot;
 
 import static edu.wpi.first.wpilibj.Timer.delay;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -31,15 +32,15 @@ public class Robot extends TimedRobot {
    * for any initialization code.
    */
 
-  private Jaguar leftMotor = new Jaguar(0);
-  private Jaguar rightMotor = new Jaguar(1);
+  private CANSparkMax leftMotor = new CANSparkMax(1, MotorType.kBrushless);
+  private CANSparkMax rightMotor = new CANSparkMax(2, MotorType.kBrushless);
 
   private PWMSparkMax leftshooter = new PWMSparkMax(2);
-    private PWMSparkMax rightshooter = new PWMSparkMax(3);
+  private PWMSparkMax rightshooter = new PWMSparkMax(3);
 
   double kP = 1;
 
-  private DifferentialDrive minibot = new DifferentialDrive(leftMotor, rightMotor);
+  private DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor);
 
   private Gyro gyro = new ADXRS450_Gyro(SPI.Port.kMXP);
 
@@ -110,19 +111,28 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    double shooterspeed = -joy1.getRawAxis(5) * 1;
-    
+    boolean shooterspeed = joy1.getRawButton(2);
+
+    double flywheel = 0.4;
+    double flywheelstop = 0;
+
     double speed = -joy1.getRawAxis(1) * 0.6;
     double turn = -joy1.getRawAxis(0) * 0.3;
 
     double left = speed + turn;
     double right = speed - turn;
 
-    leftMotor.set(left);
-    rightMotor.set(right);
+    drivechain.tankDrive(-left, right);
 
-    leftshooter.set(shooterspeed);
-    rightshooter.set(shooterspeed);
+    if (shooterspeed) {
+      leftshooter.set(flywheel);
+      rightshooter.set(flywheelstop);
+    }
+
+    else {
+      leftshooter.set(flywheelstop);
+      rightshooter.set(flywheelstop);
+    }
 
   }
 
