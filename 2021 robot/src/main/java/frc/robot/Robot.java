@@ -64,6 +64,8 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     startTime = Timer.getFPGATimestamp();
     heading = gyro.getAngle();
+    rightMotor.setInverted(true);
+    leftMotor.setInverted(true);
   }
 
   @Override
@@ -100,7 +102,10 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    rightMotor.setInverted(false);
+    leftMotor.setInverted(false);
+  }
 
   @Override
   public void teleopPeriodic() {
