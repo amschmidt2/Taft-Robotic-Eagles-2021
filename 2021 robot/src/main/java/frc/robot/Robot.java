@@ -78,11 +78,11 @@ public class Robot extends TimedRobot {
     double time = Timer.getFPGATimestamp();
 
     if (time - startTime < 6) {
-    drivechain.tankDrive(-.5 + kP * error, 0 - kP * error);
+    drivechain.tankDrive(.5 + kP * error, 0 - kP * error);
   }
 
   if ((time - startTime > 6) && (time - startTime < 12)) {
-    drivechain.tankDrive(0 + kP * error, -.5 - kP * error);
+    drivechain.tankDrive(0 + kP * error, .5 - kP * error);
   }
 
   if ((time - startTime > 12) && (time - startTime < 18 )) {
@@ -104,8 +104,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    rightMotor.setInverted(false);
-    leftMotor.setInverted(false);
+    leftshooter.setInverted(true);
   }
 
   @Override
