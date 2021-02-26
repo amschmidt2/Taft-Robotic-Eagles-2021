@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Places a compass indicator for the gyro heading on the dashboard
     // Explicit down-cast required because Gyro does not extend Sendable
-    Shuffleboard.getTab("gyro").add((Sendable) gyro);
+    Shuffleboard.getTab("gyro").add("Gyro", (Sendable) gyro);
   }
 
   @Override
