@@ -32,19 +32,21 @@ public class Robot extends TimedRobot {
    * for any initialization code.
    */
 
-  private CANSparkMax leftMotor = new CANSparkMax(1, MotorType.kBrushless);
-  private CANSparkMax rightMotor = new CANSparkMax(2, MotorType.kBrushless);
+  CANSparkMax leftMotor = new CANSparkMax(1, MotorType.kBrushless);
+  CANSparkMax rightMotor = new CANSparkMax(2, MotorType.kBrushless);
 
-  private PWMSparkMax leftshooter = new PWMSparkMax(2);
-  private PWMSparkMax rightshooter = new PWMSparkMax(3);
+  PWMSparkMax leftshooter = new PWMSparkMax(2);
+  PWMSparkMax rightshooter = new PWMSparkMax(3);
 
   double kP = 1;
 
-  private DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor);
+  double heading;
 
-  private Gyro gyro = new ADXRS450_Gyro(SPI.Port.kMXP);
+  DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor);
 
-  private Joystick joy1 = new Joystick(0);
+  Gyro gyro = new ADXRS450_Gyro(SPI.Port.kMXP);
+
+  Joystick joy1 = new Joystick(0);
 
   private double startTime;
 
@@ -56,58 +58,54 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void robotPeriodic() {
-  }
+  public void robotPeriodic() {}
 
   @Override
   public void autonomousInit() {
     startTime = Timer.getFPGATimestamp();
-    rightMotor.setInverted(true);
+    heading = gyro.getAngle();
   }
 
   @Override
   public void autonomousPeriodic() {
+    double error = heading - gyro.getAngle();
+
     double DELAY_TIME = 1;
     
     double time = Timer.getFPGATimestamp();
 
-    if (time - startTime < 3) {
-    leftMotor.set(0);
-    rightMotor.set(0.6);
+    if (time - startTime < 6) {
+    drivechain.tankDrive(-.5 + kP * error, 0 - kP * error);
   }
 
   delay(DELAY_TIME);
 
-  if ((time - startTime >3) && (time - startTime < 6)) {
-    leftMotor.set(0.6);
-    rightMotor.set(0);
+  if ((time - startTime > 6) && (time - startTime < 12)) {
+    drivechain.tankDrive(0 + kP * error, .5 - kP * error);
   }
 
-  if ((time - startTime > 6) && (time -startTime < 11 )) {
-    leftMotor.set(0.6);
-    rightMotor.set(0.1);
+  delay(DELAY_TIME);
+
+  if ((time - startTime > 12) && (time - startTime < 18 )) {
+    drivechain.tankDrive(.5 + kP * error, .5 - kP * error);
   }
 
-  /*if (time - startTime < 13) {
-    leftMotor.set(0.7);
-    rightMotor.set(0.1);
+  delay(DELAY_TIME);
+
+  if ((time - startTime > 18 ) && (time - startTime < 24)) {
+    drivechain.tankDrive(-.5 + kP * error, -.5 - kP * error);
   }
 
-  if (time - startTime <14) {
-    leftMotor.set(0.3);
-    rightMotor.set(0.6);    
-  }*/
-
-    else {
+  else {
     leftMotor.set(0);
     rightMotor.set(0);
+  //or (unknown if it works)
+    //drivechain.tankDrive(0 + kP * error, 0 - kP * error);
     }
   }
 
   @Override
-  public void teleopInit() {
-    rightMotor.setInverted(true);
-  }
+  public void teleopInit() {}
 
   @Override
   public void teleopPeriodic() {
