@@ -106,13 +106,13 @@ public class Robot extends TimedRobot {
     double flywheel = 0.4;
     double flywheelstop = 0;
     
-    double speed = -joy1.getRawAxis(1) * 0.6;
-    double turn = -joy1.getRawAxis(0) * 0.3;
+    double speed = joy1.getRawAxis(1) * 0.6;
+    double turn = joy1.getRawAxis(0) * 0.3;
 
     double left = speed + turn;
     double right = speed - turn;
 
-    drivechain.tankDrive(-left, right);
+    drivechain.tankDrive(left, right);
 
     if (shooterspeed) {
       leftshooter.set(flywheel);
