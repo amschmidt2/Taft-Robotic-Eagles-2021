@@ -90,7 +90,7 @@ public class Robot extends TimedRobot {
     drivechain.tankDrive(-.5 + kP * error, -.5 - kP * error);
   }
 
-  else {
+  if (time - startTime > 24)  {
     leftMotor.set(0);
     rightMotor.set(0);
 
