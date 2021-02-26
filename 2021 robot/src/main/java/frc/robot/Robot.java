@@ -6,14 +6,13 @@ package frc.robot;
 
 //import static edu.wpi.first.wpilibj.Timer.delay;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PWMSparkMax;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import static edu.wpi.first.wpilibj.Timer.delay;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -28,15 +27,15 @@ public class Robot extends TimedRobot {
    * for any initialization code.
    */
 
-  private CANSparkMax leftMotor = new CANSparkMax(1, MotorType.kBrushless);
-  private CANSparkMax rightMotor = new CANSparkMax(2, MotorType.kBrushless);
+  CANSparkMax leftMotor = new CANSparkMax(1, MotorType.kBrushless);
+  CANSparkMax rightMotor = new CANSparkMax(2, MotorType.kBrushless);
 
-  private DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor);
+  PWMSparkMax leftshooter = new PWMSparkMax(2);
+  PWMSparkMax rightshooter = new PWMSparkMax(3);
 
-  private Joystick joy1 = new Joystick(0);
+  DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor);
 
-  private PWMSparkMax leftshooter = new PWMSparkMax(2);
-  private PWMSparkMax rightshooter = new PWMSparkMax(3);
+  Joystick joy1 = new Joystick(0);
 
   private double startTime;
 
@@ -44,58 +43,40 @@ public class Robot extends TimedRobot {
   public void robotInit() {}
 
   @Override
-  public void robotPeriodic() {
-  }
+  public void robotPeriodic() {}
 
   @Override
   public void autonomousInit() {
     startTime = Timer.getFPGATimestamp();
+    rightMotor.setInverted(true);
+    leftMotor.setInverted(true);
   }
 
   @Override
   public void autonomousPeriodic() {
-    double DELAY_TIME = 1;
+    //double DELAY_TIME = 1;
     
     double time = Timer.getFPGATimestamp();
 
-    if (time - startTime < 3) {
-    leftMotor.set(0);
-    rightMotor.set(0.6);
-  }
+    if (time - startTime < 6) {}
 
-  delay(DELAY_TIME);
+  if ((time - startTime > 6) && (time - startTime < 12)) {}
 
-  if ((time - startTime >3) && (time - startTime < 6)) {
-    leftMotor.set(0.6);
-    rightMotor.set(0);
-  }
+  if ((time - startTime > 12) && (time - startTime < 18 )) {}
 
-  delay(DELAY_TIME);
+  if ((time - startTime > 18 ) && (time - startTime < 24)) {}
 
-  if ((time - startTime > 6) && (time -startTime < 11 )) {
-    leftMotor.set(0.6);
-    rightMotor.set(0);
-  }
-
-  /*if (time - startTime < 13) {
-    leftMotor.set(0.7);
-    rightMotor.set(0.1);
-  }
-
-  if (time - startTime <14) {
-    leftMotor.set(0.3);
-    rightMotor.set(0.6);    
-  }
-
-    else {
+  if (time - startTime > 24)  {
     leftMotor.set(0);
     rightMotor.set(0);
-    }*/
+    }
   }
 
   @Override
   public void teleopInit() {
     leftshooter.setInverted(true);
+    leftMotor.setInverted(false);
+    rightMotor.setInverted(false);
   }
 
   @Override
@@ -104,24 +85,25 @@ public class Robot extends TimedRobot {
 
     double flywheel = 0.4;
     double flywheelstop = 0;
-    
-    double speed = -joy1.getRawAxis(1) * 0.6;
-    double turn = -joy1.getRawAxis(0) * 0.3;
+
+    double speed = joy1.getRawAxis(1) * 0.6;
+    double turn = joy1.getRawAxis(0) * 0.3;
 
     double left = speed + turn;
     double right = speed - turn;
 
-    drivechain.tankDrive(-left, right);
+    drivechain.tankDrive(left, right);
 
     if (shooterspeed) {
       leftshooter.set(flywheel);
-      rightshooter.set(flywheel);
+      rightshooter.set(flywheelstop);
     }
 
     else {
       leftshooter.set(flywheelstop);
       rightshooter.set(flywheelstop);
     }
+    
   }
 
   @Override
