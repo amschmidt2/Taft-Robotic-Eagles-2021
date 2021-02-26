@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import static edu.wpi.first.wpilibj.Timer.delay;
+//import static edu.wpi.first.wpilibj.Timer.delay;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -44,7 +44,7 @@ public class Robot extends TimedRobot {
 
   DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor);
 
-  Gyro gyro = new ADXRS450_Gyro(SPI.Port.kMXP);
+  Gyro gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
 
   Joystick joy1 = new Joystick(0);
 
@@ -70,7 +70,7 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     double error = heading - gyro.getAngle();
 
-    double DELAY_TIME = 1;
+    //double DELAY_TIME = 1;
     
     double time = Timer.getFPGATimestamp();
 
@@ -78,19 +78,13 @@ public class Robot extends TimedRobot {
     drivechain.tankDrive(-.5 + kP * error, 0 - kP * error);
   }
 
-  delay(DELAY_TIME);
-
   if ((time - startTime > 6) && (time - startTime < 12)) {
-    drivechain.tankDrive(0 + kP * error, .5 - kP * error);
+    drivechain.tankDrive(0 + kP * error, -.5 - kP * error);
   }
-
-  delay(DELAY_TIME);
 
   if ((time - startTime > 12) && (time - startTime < 18 )) {
     drivechain.tankDrive(.5 + kP * error, .5 - kP * error);
   }
-
-  delay(DELAY_TIME);
 
   if ((time - startTime > 18 ) && (time - startTime < 24)) {
     drivechain.tankDrive(-.5 + kP * error, -.5 - kP * error);
@@ -99,6 +93,7 @@ public class Robot extends TimedRobot {
   else {
     leftMotor.set(0);
     rightMotor.set(0);
+
   //or (unknown if it works)
     //drivechain.tankDrive(0 + kP * error, 0 - kP * error);
     }
@@ -120,7 +115,7 @@ public class Robot extends TimedRobot {
     double left = speed + turn;
     double right = speed - turn;
 
-    drivechain.tankDrive(-left, right);
+    drivechain.tankDrive(-left, -right);
 
     if (shooterspeed) {
       leftshooter.set(flywheel);
