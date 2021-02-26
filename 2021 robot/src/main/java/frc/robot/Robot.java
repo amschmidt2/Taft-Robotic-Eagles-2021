@@ -55,7 +55,6 @@ public class Robot extends TimedRobot {
     // Places a compass indicator for the gyro heading on the dashboard
     // Explicit down-cast required because Gyro does not extend Sendable
     Shuffleboard.getTab("gyro").add("Gyro", (Sendable) gyro);
-    //drivechain.setInvertedMotor(drivechain.MotorType.kRearLeft, true);
   }
 
   @Override
@@ -105,6 +104,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     leftshooter.setInverted(true);
+    leftMotor.setInverted(false);
+    rightMotor.setInverted(false);
   }
 
   @Override
