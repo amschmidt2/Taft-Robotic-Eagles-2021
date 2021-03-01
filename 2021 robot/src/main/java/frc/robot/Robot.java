@@ -6,6 +6,7 @@ package frc.robot;
 
 //import static edu.wpi.first.wpilibj.Timer.delay;
 
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Joystick;
@@ -13,6 +14,7 @@ import edu.wpi.first.wpilibj.PWMSparkMax;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -30,6 +32,9 @@ public class Robot extends TimedRobot {
   CANSparkMax leftMotor = new CANSparkMax(1, MotorType.kBrushless);
   CANSparkMax rightMotor = new CANSparkMax(2, MotorType.kBrushless);
 
+  private CANEncoder leftEncoder;
+  private CANEncoder rightEncoder;
+  
   PWMSparkMax leftshooter = new PWMSparkMax(2);
   PWMSparkMax rightshooter = new PWMSparkMax(3);
 
@@ -40,7 +45,10 @@ public class Robot extends TimedRobot {
   private double startTime;
 
   @Override
-  public void robotInit() {}
+  public void robotInit() {
+    leftEncoder = leftMotor.getEncoder();
+    rightEncoder = rightMotor.getEncoder();
+  }
 
   @Override
   public void robotPeriodic() {}
@@ -81,6 +89,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    SmartDashboard.putNumber("Encoder Position", leftEncoder.getPosition());
+    SmartDashboard.putNumber("Encoder Velocity", leftEncoder.getVelocity());
+
+    SmartDashboard.putNumber("Encoder Position", rightEncoder.getPosition());
+    SmartDashboard.putNumber("Encoder Velocity", rightEncoder.getVelocity());
+    
     boolean shooterspeed = joy1.getRawButton(2);
 
     double flywheel = 0.4;
