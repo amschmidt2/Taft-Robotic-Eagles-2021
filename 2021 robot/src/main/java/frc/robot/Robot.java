@@ -56,8 +56,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     startTime = Timer.getFPGATimestamp();
-    rightMotor.setInverted(true);
-    leftMotor.setInverted(true);
   }
 
   @Override
@@ -83,8 +81,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     leftshooter.setInverted(true);
-    leftMotor.setInverted(false);
-    rightMotor.setInverted(false);
   }
 
   @Override
@@ -100,8 +96,8 @@ public class Robot extends TimedRobot {
     double flywheel = 0.4;
     double flywheelstop = 0;
 
-    double speed = joy1.getRawAxis(1) * 0.6;
-    double turn = joy1.getRawAxis(0) * 0.3;
+    double speed = -joy1.getRawAxis(1) * 0.6;
+    double turn = -joy1.getRawAxis(0) * 0.3;
 
     double left = speed + turn;
     double right = speed - turn;
