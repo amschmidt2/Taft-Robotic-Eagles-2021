@@ -4,16 +4,27 @@
 
 package frc.robot;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
 //import static edu.wpi.first.wpilibj.Timer.delay;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.TimedRobot;
-//import edu.wpi.first.wpilibj.Timer;
-
-import edu.wpi.first.wpilibj.PWMSparkMax;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.PWMSparkMax;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -28,70 +39,77 @@ public class Robot extends TimedRobot {
    * for any initialization code.
    */
 
-  private CANSparkMax leftMotor = new CANSparkMax(1, MotorType.kBrushless);
-  private CANSparkMax rightMotor = new CANSparkMax(2, MotorType.kBrushless);
+  CANSparkMax leftMotor = new CANSparkMax(1, MotorType.kBrushless);
+  CANSparkMax rightMotor = new CANSparkMax(2, MotorType.kBrushless);
 
-  private DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor);
+  PWMSparkMax leftshooter = new PWMSparkMax(2);
+  PWMSparkMax rightshooter = new PWMSparkMax(3);
 
-  private Joystick joy1 = new Joystick(0);
+  double kP = 1;
 
-  private PWMSparkMax leftshooter = new PWMSparkMax(2);
-  private PWMSparkMax rightshooter = new PWMSparkMax(3);
+  double heading = 0;
 
-  //private double startTime;
+  DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor);
+
+  Gyro gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
+ 
+  Joystick joy1 = new Joystick(0);
+
+  private double startTime;
 
   @Override
   public void robotInit() {
+    // Places a compass indicator for the gyro heading on the dashboard
+    // Explicit down-cast required because Gyro does not extend Sendable
+    Shuffleboard.getTab("gyro").add("Gyro", (Sendable) gyro);
   }
 
   @Override
-  public void robotPeriodic() {
-  }
+  public void robotPeriodic() {}
 
   @Override
   public void autonomousInit() {
-    //startTime = Timer.getFPGATimestamp();
+    startTime = Timer.getFPGATimestamp();
+    heading = gyro.getAngle();
+    rightMotor.setInverted(true);
+    leftMotor.setInverted(true);
   }
 
   @Override
   public void autonomousPeriodic() {
-    /*double DELAY_TIME = 1;
+    //double error = heading - gyro.getAngle();
+
+    //double DELAY_TIME = 1;
     
     double time = Timer.getFPGATimestamp();
 
-    if (time - startTime < 3) {
-    leftMotor.set(0);
-    rightMotor.set(0.6);
+    if (time - startTime < 24) {
+      String trajectoryJSON = "Paths/Slalom-Path.wpilib.json";
+      Trajectory trajectory = new Trajectory();
+      try {
+        Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+        trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      } catch (IOException ex) {
+        DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+      }
   }
 
-  delay(DELAY_TIME);
-
-  if ((time - startTime >3) && (time - startTime < 6)) {
-    leftMotor.set(0.6);
-    rightMotor.set(0);
+  /*if ((time - startTime > 6) && (time - startTime < 12)) {
+    drivechain.tankDrive(0 + kP * error, .5 - kP * error);
   }
 
-  delay(DELAY_TIME);
-
-  if ((time - startTime > 6) && (time -startTime < 11 )) {
-    leftMotor.set(0.6);
-    rightMotor.set(0);
+  if ((time - startTime > 12) && (time - startTime < 18 )) {
+    drivechain.tankDrive(.5 + kP * error, .5 - kP * error);
   }
 
-  /*if (time - startTime < 13) {
-    leftMotor.set(0.7);
-    rightMotor.set(0.1);
-  }
+  if ((time - startTime > 18 ) && (time - startTime < 24)) {
+    drivechain.tankDrive(-.5 + kP * error, -.5 - kP * error);
+  }*/
 
-  if (time - startTime <14) {
-    leftMotor.set(0.3);
-    rightMotor.set(0.6);    
-  }
-
-    else {
+  if (time - startTime > 24)  {
     leftMotor.set(0);
     rightMotor.set(0);
-    }*/
+    }
   }
 
   @Override
@@ -105,7 +123,7 @@ public class Robot extends TimedRobot {
 
     double flywheel = 0.4;
     double flywheelstop = 0;
-    
+
     double speed = -joy1.getRawAxis(1) * 0.6;
     double turn = -joy1.getRawAxis(0) * 0.3;
 
@@ -116,13 +134,14 @@ public class Robot extends TimedRobot {
 
     if (shooterspeed) {
       leftshooter.set(flywheel);
-      rightshooter.set(flywheel);
+      rightshooter.set(flywheelstop);
     }
 
     else {
       leftshooter.set(flywheelstop);
       rightshooter.set(flywheelstop);
     }
+
   }
 
   @Override
