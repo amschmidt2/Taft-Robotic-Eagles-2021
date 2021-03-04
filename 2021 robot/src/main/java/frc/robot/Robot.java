@@ -40,12 +40,12 @@ public class Robot extends TimedRobot {
 
   double kP = 1;
 
-  double heading;
+  double heading = 0;
 
   DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor);
 
   Gyro gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
-
+ 
   Joystick joy1 = new Joystick(0);
 
   private double startTime;
