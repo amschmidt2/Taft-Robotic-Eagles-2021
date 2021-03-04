@@ -11,19 +11,14 @@ import java.nio.file.Path;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.PWMSparkMax;
 
 /**
@@ -45,24 +40,15 @@ public class Robot extends TimedRobot {
   PWMSparkMax leftshooter = new PWMSparkMax(2);
   PWMSparkMax rightshooter = new PWMSparkMax(3);
 
-  double kP = 1;
-
-  double heading = 0;
 
   DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor);
 
-  Gyro gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
- 
   Joystick joy1 = new Joystick(0);
 
   private double startTime;
 
   @Override
-  public void robotInit() {
-    // Places a compass indicator for the gyro heading on the dashboard
-    // Explicit down-cast required because Gyro does not extend Sendable
-    Shuffleboard.getTab("gyro").add("Gyro", (Sendable) gyro);
-  }
+  public void robotInit() {}
 
   @Override
   public void robotPeriodic() {}
@@ -70,17 +56,12 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     startTime = Timer.getFPGATimestamp();
-    heading = gyro.getAngle();
     rightMotor.setInverted(true);
     leftMotor.setInverted(true);
   }
 
   @Override
   public void autonomousPeriodic() {
-    //double error = heading - gyro.getAngle();
-
-    //double DELAY_TIME = 1;
-    
     double time = Timer.getFPGATimestamp();
 
     if (time - startTime < 24) {
@@ -93,18 +74,6 @@ public class Robot extends TimedRobot {
         DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
       }
   }
-
-  /*if ((time - startTime > 6) && (time - startTime < 12)) {
-    drivechain.tankDrive(0 + kP * error, .5 - kP * error);
-  }
-
-  if ((time - startTime > 12) && (time - startTime < 18 )) {
-    drivechain.tankDrive(.5 + kP * error, .5 - kP * error);
-  }
-
-  if ((time - startTime > 18 ) && (time - startTime < 24)) {
-    drivechain.tankDrive(-.5 + kP * error, -.5 - kP * error);
-  }*/
 
   if (time - startTime > 24)  {
     leftMotor.set(0);
