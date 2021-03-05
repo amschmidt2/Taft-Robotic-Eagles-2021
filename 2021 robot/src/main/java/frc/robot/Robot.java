@@ -38,7 +38,9 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {}
 
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    rightMotor.setInverted(true);
+  }
 
   @Override
   public void teleopPeriodic() {
@@ -47,9 +49,6 @@ public class Robot extends TimedRobot {
 
     double left = speed + turn;
     double right = speed - turn;
-
-    leftMotor.set(left);
-    rightMotor.set(right);
 
     leftMotor.set(left);
     rightMotor.set(right);
