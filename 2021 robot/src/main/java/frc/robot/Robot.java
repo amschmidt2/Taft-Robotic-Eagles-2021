@@ -102,8 +102,15 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     boolean shooterspeed = joy1.getRawButton(2);
+    boolean shooterspeed1 = joy1.getRawButton(1);
+    boolean shooterspeed2 = joy1.getRawButton(3);
+    boolean shooterspeed3 = joy1.getRawButton(4);
 
     double flywheel = 0.4;
+    double flywheel1 = 0.6;
+    double flywheel2 = 0.8;
+    double flywheel3 = 1;
+    
     double flywheelstop = 0;
     
     double speed = -joy1.getRawAxis(1) * 0.6;
@@ -117,6 +124,21 @@ public class Robot extends TimedRobot {
     if (shooterspeed) {
       leftshooter.set(flywheel);
       rightshooter.set(flywheel);
+    }
+
+    else if (shooterspeed1) {
+      leftshooter.set(flywheel1);
+      rightshooter.set(flywheel1);
+    }
+
+    else if (shooterspeed2) {
+      leftshooter.set(flywheel2);
+      rightshooter.set(flywheel2);
+    }
+
+    else if (shooterspeed3) {
+      leftshooter.set(flywheel3);
+      rightshooter.set(flywheel3);
     }
 
     else {
