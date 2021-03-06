@@ -107,7 +107,7 @@ public class Robot extends TimedRobot {
     boolean shooterspeed3 = joy1.getRawButton(4); // Playstation Triangle , Xbox ?
 
     double flywheel = 0.4; // Playstation X , Xbox ?
-    double flywheel1 = 0.6; // Playstation Square , Xbox ?
+    double flywheel1 =0.6; // Playstation Square , Xbox ?
     double flywheel2 = 0.8; // Playstation Circle , Xbox ?
     double flywheel3 = 1; // Playstation Triangle , Xbox ?
     
@@ -124,21 +124,28 @@ public class Robot extends TimedRobot {
     if (shooterspeed0) {
       leftshooter.set(flywheel);
       rightshooter.set(flywheel);
+      System.out.println("speed"+flywheel);
     }
 
     else if (shooterspeed1) {
       leftshooter.set(flywheel1);
       rightshooter.set(flywheel1);
+      System.out.println("speed2"+flywheel1);
+
     }
 
     else if (shooterspeed2) {
       leftshooter.set(flywheel2);
       rightshooter.set(flywheel2);
+      System.out.println("speed3"+flywheel2);
+
     }
 
     else if (shooterspeed3) {
       leftshooter.set(flywheel3);
       rightshooter.set(flywheel3);
+      System.out.println("speed4"+flywheel3);
+
     }
 
     else {
