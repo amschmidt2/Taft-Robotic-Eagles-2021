@@ -101,15 +101,15 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    boolean shooterspeed = joy1.getRawButton(2);
-    boolean shooterspeed1 = joy1.getRawButton(1);
-    boolean shooterspeed2 = joy1.getRawButton(3);
-    boolean shooterspeed3 = joy1.getRawButton(4);
+    boolean shooterspeed0 = joy1.getRawButton(2); // Playstation X , Xbox ?
+    boolean shooterspeed1 = joy1.getRawButton(1); // Playstation Square , Xbox ?
+    boolean shooterspeed2 = joy1.getRawButton(3); // Playstation Circle , Xbox ?
+    boolean shooterspeed3 = joy1.getRawButton(4); // Playstation Triangle , Xbox ?
 
-    double flywheel = 0.4;
-    double flywheel1 = 0.6;
-    double flywheel2 = 0.8;
-    double flywheel3 = 1;
+    double flywheel = 0.4; // Playstation X , Xbox ?
+    double flywheel1 = 0.6; // Playstation Square , Xbox ?
+    double flywheel2 = 0.8; // Playstation Circle , Xbox ?
+    double flywheel3 = 1; // Playstation Triangle , Xbox ?
     
     double flywheelstop = 0;
     
@@ -121,7 +121,7 @@ public class Robot extends TimedRobot {
 
     drivechain.tankDrive(left, right);
 
-    if (shooterspeed) {
+    if (shooterspeed0) {
       leftshooter.set(flywheel);
       rightshooter.set(flywheel);
     }
