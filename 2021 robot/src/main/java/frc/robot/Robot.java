@@ -28,15 +28,15 @@ public class Robot extends TimedRobot {
    * for any initialization code.
    */
 
-  private CANSparkMax leftMotor = new CANSparkMax(1, MotorType.kBrushless);
-  private CANSparkMax rightMotor = new CANSparkMax(2, MotorType.kBrushless);
+  private CANSparkMax leftMotor = new CANSparkMax(1, MotorType.kBrushless); //sets left motor with CAN ID 1 as a brushless
+  private CANSparkMax rightMotor = new CANSparkMax(2, MotorType.kBrushless); // sets right motor with CAN ID 2 as brushless
 
-  private PWMSparkMax leftshooter = new PWMSparkMax(2);
-  private PWMSparkMax rightshooter = new PWMSparkMax(3);
+  private PWMSparkMax leftshooter = new PWMSparkMax(0); //sets left motor on shooter as input 1 with PWM
+  private PWMSparkMax rightshooter = new PWMSparkMax(1);//sets right motor on shooter as input 2 with PWM
 
   private DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor);
 
-  private Joystick joy1 = new Joystick(0);
+  private Joystick joy1 = new Joystick(0); //sets Joystick input from Joystick 0
 
   //private double startTime;
 
@@ -96,7 +96,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    leftshooter.setInverted(true);
+    leftshooter.setInverted(true); //Inverts the left motor of the shooter
   }
 
   @Override
@@ -113,43 +113,43 @@ public class Robot extends TimedRobot {
     
     double flywheelstop = 0;
     
-    double speed = -joy1.getRawAxis(1) * 0.6;
-    double turn = -joy1.getRawAxis(0) * 0.3;
+    double speed = -joy1.getRawAxis(1) * 0.6; // sets speed of drivechain to 60%
+    double turn = -joy1.getRawAxis(0) * 0.3; //sets speed of turing to 30%
 
-    double left = speed + turn;
-    double right = speed - turn;
+    double left = speed + turn; //sets turing for left motor
+    double right = speed - turn; //sets turing for right motor
 
     drivechain.tankDrive(left, right);
 
     if (shooterspeed0) {
       leftshooter.set(flywheel);
       rightshooter.set(flywheel);
-      System.out.println("speed"+flywheel);
+      System.out.println("speed "+flywheel);
     }
     else if (joy1.getRawButton(7)){
       leftshooter.set(joy1.getThrottle());
       rightshooter.set(joy1.getThrottle());
-      System.out.println("throtttle"+joy1.getThrottle());
+      System.out.println("throtttle "+joy1.getThrottle());
     }
 
     else if (shooterspeed1) {
       leftshooter.set(flywheel1);
       rightshooter.set(flywheel1);
-      System.out.println("speed2"+flywheel1);
+      System.out.println("speed2 "+flywheel1);
 
     }
 
     else if (shooterspeed2) {
       leftshooter.set(flywheel2);
       rightshooter.set(flywheel2);
-      System.out.println("speed3"+flywheel2);
+      System.out.println("speed3 "+flywheel2);
 
     }
 
     else if (shooterspeed3) {
       leftshooter.set(flywheel3);
       rightshooter.set(flywheel3);
-      System.out.println("speed4"+flywheel3);
+      System.out.println("speed4 "+flywheel3);
 
     }
 
