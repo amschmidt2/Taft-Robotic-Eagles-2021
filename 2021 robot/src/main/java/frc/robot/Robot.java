@@ -39,6 +39,7 @@ public class Robot extends TimedRobot {
   private PWMSparkMax leftshooter = new PWMSparkMax(0);
   private PWMSparkMax rightshooter = new PWMSparkMax(1);
   private PWMSparkMax arm = new PWMSparkMax(2);
+  private PWMSparkMax intake = new PWMSparkMax(3);
 
   //private double startTime;
 
@@ -105,30 +106,38 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    boolean shooterspeed0 = joy1.getRawButton(6); // xbox right bumper
-    boolean arm_up = joy1.getRawButton(1); // xbox A
-    boolean arm_down = joy1.getRawButton(3); //xbox X
+    boolean shooterspeed0 = joy1.getRawButton(5); // xbox right bumper
+    boolean arm_up = joy1.getRawButton(0); // xbox A
+    boolean arm_down = joy1.getRawButton(2); //xbox X
+
+//set intake to left and right trigger   
+   intake.set(joy1.getRawAxis(3));//intake in
+   intake.set(-joy1.getRawAxis(2));// intake out
    
 
-    double flywheel = 0.45; 
-  
-    
+    double flywheel = 0.45; //flywheel speed
     double flywheelstop = 0;
-    
+
+//driving and turn speed cap    
     double speed = -joy1.getRawAxis(1) * 0.6;
     double turn = -joy1.getRawAxis(0) * 0.3;
 
     double left = speed + turn;
     double right = speed - turn;
-
+//drive train control
     drivechain.tankDrive(left, right);
+//when intaking balls set the arm to turn toward the ground
+    if (joy1.getRawAxis(3) < 0.0){
+        arm.set(-.1);
 
+    }
+//control the arm up and down
     if (arm_up){
-        arm.set (1.0);
+        arm.set (.5);
           }
     if (arm_down){
-      arm.set(-1.0);
-
+      arm.set(-.5);
+//when the shooter is pressed it powers at 0.45
     }
     if (shooterspeed0) {
       leftshooter.set(flywheel);
@@ -140,6 +149,7 @@ public class Robot extends TimedRobot {
       leftshooter.set(flywheelstop);
       rightshooter.set(flywheelstop);
       arm.set(0);
+      intake.set(0);
     }
   }
 
