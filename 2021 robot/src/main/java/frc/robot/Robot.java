@@ -15,6 +15,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -38,10 +39,15 @@ public class Robot extends TimedRobot {
 
   private Joystick joy1 = new Joystick(0);
 
+
+  private PWMSparkMax arm = new PWMSparkMax(2);
+  private PWMSparkMax intake = new PWMSparkMax(3);
+
   //private double startTime;
 
   @Override
   public void robotInit() {
+    
   }
 
   @Override
@@ -97,65 +103,55 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     leftshooter.setInverted(true);
+    
   }
 
   @Override
   public void teleopPeriodic() {
-    boolean shooterspeed0 = joy1.getRawButton(2); // Playstation X , Xbox ?
-    boolean shooterspeed1 = joy1.getRawButton(1); // Playstation Square , Xbox ?
-    boolean shooterspeed2 = joy1.getRawButton(3); // Playstation Circle , Xbox ?
-    boolean shooterspeed3 = joy1.getRawButton(4); // Playstation Triangle , Xbox ?
+    boolean shooterspeed0 = joy1.getRawButton(5); // xbox right bumper
+    boolean arm_up = joy1.getRawButton(0); // xbox A
+    boolean arm_down = joy1.getRawButton(2); //xbox X
 
-    double flywheel = 0.45; // Playstation X , Xbox ?
-    double flywheel1 =0.6; // Playstation Square , Xbox ?
-    double flywheel2 = 0.8; // Playstation Circle , Xbox ?
-    double flywheel3 = 1; // Playstation Triangle , Xbox ?
-    
+//set intake to left and right trigger   
+   intake.set(joy1.getRawAxis(3));//intake in
+   intake.set(-joy1.getRawAxis(2));// intake out
+   
+
+    double flywheel = 0.45; //flywheel speed
     double flywheelstop = 0;
-    
+
+//driving and turn speed cap    
     double speed = -joy1.getRawAxis(1) * 0.6;
     double turn = -joy1.getRawAxis(0) * 0.3;
 
     double left = speed + turn;
     double right = speed - turn;
-
+//drive train control
     drivechain.tankDrive(left, right);
+//when intaking balls set the arm to turn toward the ground
+    if (joy1.getRawAxis(3) < 0.0){
+        arm.set(-.1);
 
+    }
+//control the arm up and down
+    if (arm_up){
+        arm.set (.5);
+          }
+    if (arm_down){
+      arm.set(-.5);
+//when the shooter is pressed it powers at 0.45
+    }
     if (shooterspeed0) {
       leftshooter.set(flywheel);
       rightshooter.set(flywheel);
       System.out.println("speed"+flywheel);
     }
-    else if (joy1.getRawButton(7)){
-      leftshooter.set(joy1.getThrottle());
-      rightshooter.set(joy1.getThrottle());
-      System.out.println("throtttle"+joy1.getThrottle());
-    }
-
-    else if (shooterspeed1) {
-      leftshooter.set(flywheel1);
-      rightshooter.set(flywheel1);
-      System.out.println("speed2"+flywheel1);
-
-    }
-
-    else if (shooterspeed2) {
-      leftshooter.set(flywheel2);
-      rightshooter.set(flywheel2);
-      System.out.println("speed3"+flywheel2);
-
-    }
-
-    else if (shooterspeed3) {
-      leftshooter.set(flywheel3);
-      rightshooter.set(flywheel3);
-      System.out.println("speed4"+flywheel3);
-
-    }
-
+   
     else {
       leftshooter.set(flywheelstop);
       rightshooter.set(flywheelstop);
+      arm.set(0);
+      intake.set(0);
     }
   }
 
