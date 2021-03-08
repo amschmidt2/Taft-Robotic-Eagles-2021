@@ -31,12 +31,12 @@ public class Robot extends TimedRobot {
   private CANSparkMax leftMotor = new CANSparkMax(1, MotorType.kBrushless);
   private CANSparkMax rightMotor = new CANSparkMax(2, MotorType.kBrushless);
 
+  private PWMSparkMax leftshooter = new PWMSparkMax(2);
+  private PWMSparkMax rightshooter = new PWMSparkMax(3);
+
   private DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor);
 
   private Joystick joy1 = new Joystick(0);
-
-  private PWMSparkMax leftshooter = new PWMSparkMax(2);
-  private PWMSparkMax rightshooter = new PWMSparkMax(3);
 
   //private double startTime;
 
