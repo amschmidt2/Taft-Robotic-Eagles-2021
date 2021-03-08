@@ -29,15 +29,15 @@ public class Robot extends TimedRobot {
    * for any initialization code.
    */
 
-  private CANSparkMax leftMotor = new CANSparkMax(1, MotorType.kBrushless);
-  private CANSparkMax rightMotor = new CANSparkMax(2, MotorType.kBrushless);
+  private CANSparkMax leftMotor = new CANSparkMax(1, MotorType.kBrushless); //sets left motor with CAN ID 1 as a brushless
+  private CANSparkMax rightMotor = new CANSparkMax(2, MotorType.kBrushless); // sets right motor with CAN ID 2 as brushless
 
-  private PWMSparkMax leftshooter = new PWMSparkMax(2);
-  private PWMSparkMax rightshooter = new PWMSparkMax(3);
+  private PWMSparkMax leftshooter = new PWMSparkMax(0); //sets left motor on shooter as input 1 with PWM
+  private PWMSparkMax rightshooter = new PWMSparkMax(1);//sets right motor on shooter as input 2 with PWM
 
   private DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor);
 
-  private Joystick joy1 = new Joystick(0);
+  private Joystick joy1 = new Joystick(0); //sets Joystick input from Joystick 0
 
 
   private PWMSparkMax arm = new PWMSparkMax(2);
@@ -119,14 +119,13 @@ public class Robot extends TimedRobot {
 
     double flywheel = 0.45; //flywheel speed
     double flywheelstop = 0;
+    
+    double speed = -joy1.getRawAxis(1) * 0.6; // sets speed of drivechain to 60%
+    double turn = -joy1.getRawAxis(0) * 0.3; //sets speed of turing to 30%
 
-//driving and turn speed cap    
-    double speed = -joy1.getRawAxis(1) * 0.6;
-    double turn = -joy1.getRawAxis(0) * 0.3;
+    double left = speed + turn; //sets turing for left motor
+    double right = speed - turn; //sets turing for right motor
 
-    double left = speed + turn;
-    double right = speed - turn;
-//drive train control
     drivechain.tankDrive(left, right);
 //when intaking balls set the arm to turn toward the ground
     if (joy1.getRawAxis(3) < 0.0){
@@ -144,9 +143,11 @@ public class Robot extends TimedRobot {
     if (shooterspeed0) {
       leftshooter.set(flywheel);
       rightshooter.set(flywheel);
-      System.out.println("speed"+flywheel);
+      System.out.println("speed "+flywheel);
     }
-   
+    
+    
+
     else {
       leftshooter.set(flywheelstop);
       rightshooter.set(flywheelstop);
