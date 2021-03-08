@@ -29,30 +29,26 @@ public class Robot extends TimedRobot {
    * for any initialization code.
    */
 
-  private CANSparkMax leftMotor = new CANSparkMax(1, MotorType.kBrushless); //sets left motor with CAN ID 1 as a brushless
-  private CANSparkMax rightMotor = new CANSparkMax(2, MotorType.kBrushless); // sets right motor with CAN ID 2 as brushless
+  private CANSparkMax leftMotor = new CANSparkMax(1, MotorType.kBrushless); //Sets left motor with CAN ID 1 as a brushless
+  private CANSparkMax rightMotor = new CANSparkMax(2, MotorType.kBrushless); //Sets right motor with CAN ID 2 as brushless
 
-  private PWMSparkMax leftshooter = new PWMSparkMax(0); //sets left motor on shooter as input 1 with PWM
-  private PWMSparkMax rightshooter = new PWMSparkMax(1);//sets right motor on shooter as input 2 with PWM
+  private PWMSparkMax leftshooter = new PWMSparkMax(0); //Sets left motor on shooter as output 0 with PWM
+  private PWMSparkMax rightshooter = new PWMSparkMax(1); //sets right motor on shooter as output 1 with PWM
 
-  private DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor);
+  private PWMSparkMax arm = new PWMSparkMax(2); //Sets PWM output on pin 2 
+  private PWMSparkMax intake = new PWMSparkMax(3); //Sets PWM output on pin 3
 
-  private Joystick joy1 = new Joystick(0); //sets Joystick input from Joystick 0
+  private DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor); //Sets Drivechain to control both left and right motors
 
-
-  private PWMSparkMax arm = new PWMSparkMax(2);
-  private PWMSparkMax intake = new PWMSparkMax(3);
+  private Joystick joy1 = new Joystick(0); //Sets Joystick input from Joystick 0
 
   //private double startTime;
 
   @Override
-  public void robotInit() {
-    
-  }
+  public void robotInit() {}
 
   @Override
-  public void robotPeriodic() {
-  }
+  public void robotPeriodic() {}
 
   @Override
   public void autonomousInit() {
@@ -102,51 +98,47 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    leftshooter.setInverted(true);
-    
+    leftshooter.setInverted(true); //Sets the left motor to be inverted
   }
 
   @Override
   public void teleopPeriodic() {
-    boolean shooterspeed0 = joy1.getRawButton(5); // xbox right bumper
-    boolean arm_up = joy1.getRawButton(0); // xbox A
+    boolean shooterspeed = joy1.getRawButton(5); //xbox right bumper
+    boolean arm_up = joy1.getRawButton(0); //xbox A
     boolean arm_down = joy1.getRawButton(2); //xbox X
 
 //set intake to left and right trigger   
-   intake.set(joy1.getRawAxis(3));//intake in
-   intake.set(-joy1.getRawAxis(2));// intake out
+   intake.set(joy1.getRawAxis(3)); //intake in
+   intake.set(-joy1.getRawAxis(2)); //intake out
    
-
     double flywheel = 0.45; //flywheel speed
     double flywheelstop = 0;
     
-    double speed = -joy1.getRawAxis(1) * 0.6; // sets speed of drivechain to 60%
-    double turn = -joy1.getRawAxis(0) * 0.3; //sets speed of turing to 30%
+    double speed = -joy1.getRawAxis(1) * 0.6; //Sets speed of drivechain to 60%
+    double turn = -joy1.getRawAxis(0) * 0.3; //Sets speed of turing to 30%
 
-    double left = speed + turn; //sets turing for left motor
-    double right = speed - turn; //sets turing for right motor
+    double left = speed + turn; //Sets turing for left motor
+    double right = speed - turn; //Sets turing for right motor
 
     drivechain.tankDrive(left, right);
-//when intaking balls set the arm to turn toward the ground
+//When intaking balls set the arm to turn toward the ground
     if (joy1.getRawAxis(3) < 0.0){
         arm.set(-.1);
 
     }
-//control the arm up and down
+//Control the arm up and down
     if (arm_up){
         arm.set (.5);
           }
     if (arm_down){
       arm.set(-.5);
-//when the shooter is pressed it powers at 0.45
+//When the shooter is pressed it powers at 0.45
     }
-    if (shooterspeed0) {
+    if (shooterspeed) {
       leftshooter.set(flywheel);
       rightshooter.set(flywheel);
       System.out.println("speed "+flywheel);
     }
-    
-    
 
     else {
       leftshooter.set(flywheelstop);
