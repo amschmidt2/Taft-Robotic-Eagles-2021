@@ -30,7 +30,10 @@ public class Robot extends TimedRobot {
 
   private Joystick joy1 = new Joystick(0);
 
-  NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+
+  @Override
+  public void robotInit() {
+NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 NetworkTableEntry tx = table.getEntry("tx");
 NetworkTableEntry ty = table.getEntry("ty");
 NetworkTableEntry ta = table.getEntry("ta");
@@ -46,8 +49,7 @@ SmartDashboard.putNumber("LimelightY", y);
 SmartDashboard.putNumber("LimelightArea", area);
 
 
-  @Override
-  public void robotInit() {}
+  }
 
   @Override
   public void robotPeriodic() {}
