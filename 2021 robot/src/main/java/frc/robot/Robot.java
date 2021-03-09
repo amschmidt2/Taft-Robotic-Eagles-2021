@@ -6,14 +6,15 @@ package frc.robot;
 
 //import static edu.wpi.first.wpilibj.Timer.delay;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.TimedRobot;
-//import edu.wpi.first.wpilibj.Timer;
-
-import edu.wpi.first.wpilibj.PWMSparkMax;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PWMSparkMax;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 /**
@@ -29,71 +30,53 @@ public class Robot extends TimedRobot {
    * for any initialization code.
    */
 
-  private CANSparkMax leftMotor = new CANSparkMax(1, MotorType.kBrushless); //Sets left motor with CAN ID 1 as a brushless
-  private CANSparkMax rightMotor = new CANSparkMax(2, MotorType.kBrushless); //Sets right motor with CAN ID 2 as brushless
+  CANSparkMax leftMotor = new CANSparkMax(1, MotorType.kBrushless);
+  CANSparkMax rightMotor = new CANSparkMax(2, MotorType.kBrushless);
 
-  private PWMSparkMax leftshooter = new PWMSparkMax(0); //Sets left motor on shooter as output 0 with PWM
-  private PWMSparkMax rightshooter = new PWMSparkMax(1); //sets right motor on shooter as output 1 with PWM
+  private CANEncoder leftEncoder;
+  private CANEncoder rightEncoder;
+  
+  PWMSparkMax leftshooter = new PWMSparkMax(2);
+  PWMSparkMax rightshooter = new PWMSparkMax(3);
 
-  private PWMSparkMax arm = new PWMSparkMax(2); //Sets PWM output on pin 2 
-  private PWMSparkMax intake = new PWMSparkMax(3); //Sets PWM output on pin 3
+  DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor);
 
-  private DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor); //Sets Drivechain to control both left and right motors
+  Joystick joy1 = new Joystick(0);
 
-  private Joystick joy1 = new Joystick(0); //Sets Joystick input from Joystick 0
-
-  //private double startTime;
+  private double startTime;
 
   @Override
-  public void robotInit() {}
+  public void robotInit() {
+    leftEncoder = leftMotor.getEncoder();
+    rightEncoder = rightMotor.getEncoder();
+  }
 
   @Override
   public void robotPeriodic() {}
 
   @Override
   public void autonomousInit() {
-    //startTime = Timer.getFPGATimestamp();
+    startTime = Timer.getFPGATimestamp();
   }
 
   @Override
   public void autonomousPeriodic() {
-    /*double DELAY_TIME = 1;
+    //double DELAY_TIME = 1;
     
     double time = Timer.getFPGATimestamp();
 
-    if (time - startTime < 3) {
-    leftMotor.set(0);
-    rightMotor.set(0.6);
-  }
+    if (time - startTime < 6) {}
 
-  delay(DELAY_TIME);
+  if ((time - startTime > 6) && (time - startTime < 12)) {}
 
-  if ((time - startTime >3) && (time - startTime < 6)) {
-    leftMotor.set(0.6);
-    rightMotor.set(0);
-  }
+  if ((time - startTime > 12) && (time - startTime < 18 )) {}
 
-  delay(DELAY_TIME);
+  if ((time - startTime > 18 ) && (time - startTime < 24)) {}
 
-  if ((time - startTime > 6) && (time -startTime < 11 )) {
-    leftMotor.set(0.6);
-    rightMotor.set(0);
-  }
-
-  /*if (time - startTime < 13) {
-    leftMotor.set(0.7);
-    rightMotor.set(0.1);
-  }
-
-  if (time - startTime <14) {
-    leftMotor.set(0.3);
-    rightMotor.set(0.6);    
-  }
-
-    else {
+  if (time - startTime > 24)  {
     leftMotor.set(0);
     rightMotor.set(0);
-    }*/
+    }
   }
 
   @Override
@@ -103,27 +86,24 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    boolean shooterspeed = joy1.getRawButton(5); //xbox Right bumper, PS4/PS5 button 6 (Right Bumper)
-    boolean arm_up = joy1.getRawButton(2); //xbox X, PS4/PS5 button 1 (Square)
-    boolean arm_down = joy1.getRawButton(0); //xbox A, PS4/PS5 button 2 (X)
+    SmartDashboard.putNumber("Encoder Position", leftEncoder.getPosition());
+    SmartDashboard.putNumber("Encoder Velocity", leftEncoder.getVelocity());
 
-//set intake to left and right trigger   
-   intake.set(joy1.getRawAxis(3)); //intake in, Xbox Right Trigger (Axis 3), PS4/PS5 Axis 4 (Right Trigger)
-   intake.set(-joy1.getRawAxis(2)); //intake out, Xbox Left Trigger (Axis 2), PS4/PS5 Axis 3 (Left Trigger)
-   
-    double flywheel = 0.45; //flywheel speed
-    double flywheelstop = 0;
+    SmartDashboard.putNumber("Encoder Position", rightEncoder.getPosition());
+    SmartDashboard.putNumber("Encoder Velocity", rightEncoder.getVelocity());
     
-    double speed = -joy1.getRawAxis(1) * 0.6; //Sets speed of drivechain to 60% 
-    double turn = -joy1.getRawAxis(0) * 0.3; //Sets speed of turing to 30%
+    boolean shooterspeed = joy1.getRawButton(2);
+
+    double flywheel = 0.4;
+    double flywheelstop = 0;
+
+    double speed = -joy1.getRawAxis(1) * 0.6;
+    double turn = -joy1.getRawAxis(0) * 0.3;
 
     double left = speed + turn; //Sets turing for left motor
     double right = speed - turn; //Sets turing for right motor
 
     drivechain.tankDrive(left, right);
-//When intaking balls set the arm to turn toward the ground
-    if (joy1.getRawAxis(3) < 0.0){ //intake in, Xbox Right Trigger (Axis 3), PS4/PS5 Axis 4 (Right Trigger)
-        arm.set(-.1);
 
     }
 //Control the arm up and down
@@ -136,8 +116,7 @@ public class Robot extends TimedRobot {
     }
     if (shooterspeed) {
       leftshooter.set(flywheel);
-      rightshooter.set(flywheel);
-      System.out.println("speed "+flywheel);
+      rightshooter.set(flywheelstop);
     }
 
     else {
@@ -146,6 +125,7 @@ public class Robot extends TimedRobot {
       arm.set(0);
       intake.set(0);
     }
+    
   }
 
   @Override
