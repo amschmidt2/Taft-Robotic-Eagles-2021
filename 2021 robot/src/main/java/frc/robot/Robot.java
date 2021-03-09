@@ -8,11 +8,12 @@ package frc.robot;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.EncoderType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PWMSparkMax;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
+//import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -30,38 +31,60 @@ public class Robot extends TimedRobot {
    * for any initialization code.
    */
 
+// Motor Controllers
   CANSparkMax leftMotor = new CANSparkMax(1, MotorType.kBrushless);
   CANSparkMax rightMotor = new CANSparkMax(2, MotorType.kBrushless);
 
   PWMSparkMax leftshooter = new PWMSparkMax(2);
   PWMSparkMax rightshooter = new PWMSparkMax(3);
 
+// Drive Chain
+  DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor);
+
+// Joystick  
+  Joystick joy1 = new Joystick(0);
+
+  //private double startTime;.
+
+// Encoders
   private CANEncoder leftEncoder;
   private CANEncoder rightEncoder;
 
-  DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor);
+  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
 
-  Joystick joy1 = new Joystick(0);
 
-  private double startTime;
+    
+
+
 
   @Override
   public void robotInit() {
     leftEncoder = leftMotor.getEncoder();
     rightEncoder = rightMotor.getEncoder();
+    
+    leftEncoder = leftMotor.getEncoder(EncoderType.kQuadrature, 4096);
+    rightEncoder = rightMotor.getEncoder(EncoderType.kQuadrature, 4096);
+
   }
 
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    SmartDashboard.putNumber("Encoder Position", leftEncoder.getPosition());
+    SmartDashboard.putNumber("Encoder Velocity", leftEncoder.getVelocity());
+
+    SmartDashboard.putNumber("Encoder Position", rightEncoder.getPosition());
+    SmartDashboard.putNumber("Encoder Velocity", rightEncoder.getVelocity());
+    
+  }
 
   @Override
   public void autonomousInit() {
-    startTime = Timer.getFPGATimestamp();
+    //startTime = Timer.getFPGATimestamp();
   }
 
   @Override
   public void autonomousPeriodic() {
-    //double DELAY_TIME = 1;
+    /*double DELAY_TIME = 1;
     
     double time = Timer.getFPGATimestamp();
 
@@ -76,7 +99,7 @@ public class Robot extends TimedRobot {
   if (time - startTime > 24)  {
     leftMotor.set(0);
     rightMotor.set(0);
-    }
+    }*/
   }
 
   @Override
@@ -86,12 +109,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    SmartDashboard.putNumber("Encoder Position", leftEncoder.getPosition());
-    SmartDashboard.putNumber("Encoder Velocity", leftEncoder.getVelocity());
-
-    SmartDashboard.putNumber("Encoder Position", rightEncoder.getPosition());
-    SmartDashboard.putNumber("Encoder Velocity", rightEncoder.getVelocity());
-    
     boolean shooterspeed = joy1.getRawButton(2);
 
     double flywheel = 0.4;
