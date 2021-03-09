@@ -33,11 +33,11 @@ public class Robot extends TimedRobot {
   CANSparkMax leftMotor = new CANSparkMax(1, MotorType.kBrushless);
   CANSparkMax rightMotor = new CANSparkMax(2, MotorType.kBrushless);
 
-  private CANEncoder leftEncoder;
-  private CANEncoder rightEncoder;
-  
   PWMSparkMax leftshooter = new PWMSparkMax(2);
   PWMSparkMax rightshooter = new PWMSparkMax(3);
+
+  private CANEncoder leftEncoder;
+  private CANEncoder rightEncoder;
 
   DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor);
 
@@ -105,15 +105,6 @@ public class Robot extends TimedRobot {
 
     drivechain.tankDrive(left, right);
 
-    }
-//Control the arm up and down
-    if (arm_up){
-        arm.set (.5);
-          }
-    if (arm_down){
-      arm.set(-.5);
-//When the shooter is pressed it powers at 0.45
-    }
     if (shooterspeed) {
       leftshooter.set(flywheel);
       rightshooter.set(flywheelstop);
@@ -122,8 +113,6 @@ public class Robot extends TimedRobot {
     else {
       leftshooter.set(flywheelstop);
       rightshooter.set(flywheelstop);
-      arm.set(0);
-      intake.set(0);
     }
     
   }
