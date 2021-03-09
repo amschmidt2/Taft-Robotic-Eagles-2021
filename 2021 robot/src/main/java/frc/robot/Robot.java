@@ -104,8 +104,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     boolean shooterspeed = joy1.getRawButton(5); //xbox right bumper
-    boolean arm_up = joy1.getRawButton(0); //xbox A
-    boolean arm_down = joy1.getRawButton(2); //xbox X
+    boolean arm_up = joy1.getRawButton(2); //xbox X
+    boolean arm_down = joy1.getRawButton(0); //xbox A
 
 //set intake to left and right trigger   
    intake.set(joy1.getRawAxis(3)); //intake in
