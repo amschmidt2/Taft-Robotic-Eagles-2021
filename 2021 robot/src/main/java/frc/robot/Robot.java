@@ -103,18 +103,18 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    boolean shooterspeed = joy1.getRawButton(5); //xbox right bumper
-    boolean arm_up = joy1.getRawButton(2); //xbox X
-    boolean arm_down = joy1.getRawButton(0); //xbox A
+    boolean shooterspeed = joy1.getRawButton(5); //xbox Right bumper, PS4/PS5 button 6 (Right Bumper)
+    boolean arm_up = joy1.getRawButton(2); //xbox X, PS4/PS5 button 1 (Square)
+    boolean arm_down = joy1.getRawButton(0); //xbox A, PS4/PS5 button 2 (X)
 
 //set intake to left and right trigger   
-   intake.set(joy1.getRawAxis(3)); //intake in
-   intake.set(-joy1.getRawAxis(2)); //intake out
+   intake.set(joy1.getRawAxis(3)); //intake in, Xbox Right Trigger (Axis 3), PS4/PS5 Axis 4 (Right Trigger)
+   intake.set(-joy1.getRawAxis(2)); //intake out, Xbox Left Trigger (Axis 2), PS4/PS5 Axis 3 (Left Trigger)
    
     double flywheel = 0.45; //flywheel speed
     double flywheelstop = 0;
     
-    double speed = -joy1.getRawAxis(1) * 0.6; //Sets speed of drivechain to 60%
+    double speed = -joy1.getRawAxis(1) * 0.6; //Sets speed of drivechain to 60% 
     double turn = -joy1.getRawAxis(0) * 0.3; //Sets speed of turing to 30%
 
     double left = speed + turn; //Sets turing for left motor
@@ -122,7 +122,7 @@ public class Robot extends TimedRobot {
 
     drivechain.tankDrive(left, right);
 //When intaking balls set the arm to turn toward the ground
-    if (joy1.getRawAxis(3) < 0.0){
+    if (joy1.getRawAxis(3) < 0.0){ //intake in, Xbox Right Trigger (Axis 3), PS4/PS5 Axis 4 (Right Trigger)
         arm.set(-.1);
 
     }
