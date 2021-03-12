@@ -50,40 +50,77 @@ public class Robot extends TimedRobot {
   private CANEncoder leftEncoder;
   private CANEncoder rightEncoder;
 
-  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
 
-
-    
-
+// Unit conversion
+  private final double kDriveTick2Feet = 1.0 / 4096 * 6 * Math.PI / 12;
+  private 
 
 
   @Override
   public void robotInit() {
+    leftshooter.setInverted(true); //Sets the left motor to be inverted
+
+    /*
     leftEncoder = leftMotor.getEncoder();
     rightEncoder = rightMotor.getEncoder();
     
     leftEncoder = leftMotor.getEncoder(EncoderType.kQuadrature, 4096);
     rightEncoder = rightMotor.getEncoder(EncoderType.kQuadrature, 4096);
+*/
+// Encoder Set up
+    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
 
+    leftMaster.setSensorPhase(false);
+    rightMaster.setSensorPhase(true);
+
+    leftMaster.setSelectedSensorPosition(0, 0, 10);
+    rightMaster.setSelectedSensorPosition(0, 0, 10);
+
+// Set Encoder Boundary Limits: to stop motors
+    
+
+
+// Deadband
+    drivechain.setDeadband(0.05);
   }
 
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putNumber("Encoder Position", leftEncoder.getPosition());
+    /*SmartDashboard.putNumber("Encoder Position", leftEncoder.getPosition());
     SmartDashboard.putNumber("Encoder Velocity", leftEncoder.getVelocity());
 
     SmartDashboard.putNumber("Encoder Position", rightEncoder.getPosition());
     SmartDashboard.putNumber("Encoder Velocity", rightEncoder.getVelocity());
-    
+    */
+
+    SmartDashboard.putNumber("Left Drive Encoder Value", leftMaster.getSelectedSensorPosition() * kDriveTick2Feet);
+    SmartDashboard.putNumber("Right Drive Encoder Value", RightMaster.getSelectedSensorPosition() * kDriveTick2Feet);
   }
 
   @Override
   public void autonomousInit() {
     //startTime = Timer.getFPGATimestamp();
+
+// Reset Encoders to zero
+    leftMaster.setSelectedSensorPosition(0, 0, 10);
+    rightMaster.setSelectedSensorPosition(0, 0, 10);
   }
 
   @Override
   public void autonomousPeriodic() {
+    double leftPosition = leftMaster.getSelectedSensorPosition() * kDriveTick2Feet;
+    double rightPosition = rightMaster.getSelectedSensorPosition() * kDriveTick2Feet;
+    double distance = (leftPosition + rightPosition) / 2;
+
+    if (distance < 10) {
+      drive.tankDrive(0.6, 0.6);
+    }
+
+    else {
+      drive.tankDrive(0, 0);
+    }
+
     /*double DELAY_TIME = 1;
     
     double time = Timer.getFPGATimestamp();
@@ -103,24 +140,24 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopInit() {
-    leftshooter.setInverted(true); //Sets the left motor to be inverted
-  }
+  public void teleopInit() {}
 
   @Override
   public void teleopPeriodic() {
+// Driving
+    double power = -joy1.getRawAxis(1) * 0.6;
+    double turn = -joy1.getRawAxis(0) * 0.3;
+
+    double left = power * 0.6; //Sets turing for left motor
+    double right = turn * 0.3; //Sets turing for right motor
+
+    drivechain.arcadeDrive(left, right);
+
+// Shooting Mechantism
     boolean shooterspeed = joy1.getRawButton(2);
 
     double flywheel = 0.4;
     double flywheelstop = 0;
-
-    double speed = -joy1.getRawAxis(1) * 0.6;
-    double turn = -joy1.getRawAxis(0) * 0.3;
-
-    double left = speed + turn; //Sets turing for left motor
-    double right = speed - turn; //Sets turing for right motor
-
-    drivechain.tankDrive(left, right);
 
     if (shooterspeed) {
       leftshooter.set(flywheel);
