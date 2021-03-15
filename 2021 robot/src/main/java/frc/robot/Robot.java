@@ -62,22 +62,25 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     leftshooter.setInverted(true); //Sets the left motor to be inverted
 
-    /*
+    
     leftEncoder = leftMotor.getEncoder();
     rightEncoder = rightMotor.getEncoder();
     
     leftEncoder = leftMotor.getEncoder(EncoderType.kQuadrature, 4096);
     rightEncoder = rightMotor.getEncoder(EncoderType.kQuadrature, 4096);
-*/
+
 // Encoder Set up
-    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
-    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+    leftEncoder = leftMotor.getEncoder();
+    rightEncoder = rightMotor.getEncoder();
 
-    leftMaster.setSensorPhase(false);
-    rightMaster.setSensorPhase(true);
+    leftEncoder = leftMotor.getEncoder(EncoderType.kQuadrature, 4096);
+    rightEncoder = rightMotor.getEncoder(EncoderType.kQuadrature, 4096);
 
-    leftMaster.setSelectedSensorPosition(0, 0, 10);
-    rightMaster.setSelectedSensorPosition(0, 0, 10);
+    leftMotor.setSensorPhase(false);
+    rightMotor.setSensorPhase(true);
+
+    leftMotor.setSelectedSensorPosition(0, 0, 10);
+    rightMotor.setSelectedSensorPosition(0, 0, 10);
 
 
 // Deadband
@@ -86,15 +89,15 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    /*SmartDashboard.putNumber("Encoder Position", leftEncoder.getPosition());
-    SmartDashboard.putNumber("Encoder Velocity", leftEncoder.getVelocity());
+    SmartDashboard.putNumber("Encoder Position", leftEncoder.getPosition() * kDriveTick2Feet);
+    SmartDashboard.putNumber("Encoder Velocity", leftEncoder.getVelocity() * kDriveTick2Feet);
 
-    SmartDashboard.putNumber("Encoder Position", rightEncoder.getPosition());
-    SmartDashboard.putNumber("Encoder Velocity", rightEncoder.getVelocity());
-    */
+    SmartDashboard.putNumber("Encoder Position", rightEncoder.getPosition() * kDriveTick2Feet);
+    SmartDashboard.putNumber("Encoder Velocity", rightEncoder.getVelocity() * kDriveTick2Feet);
+    
 
-    SmartDashboard.putNumber("Left Drive Encoder Value", leftMaster.getSelectedSensorPosition() * kDriveTick2Feet);
-    SmartDashboard.putNumber("Right Drive Encoder Value", RightMaster.getSelectedSensorPosition() * kDriveTick2Feet);
+    SmartDashboard.putNumber("Left Drive Encoder Value", leftEncoder.getPosition() * kDriveTick2Feet);
+    SmartDashboard.putNumber("Right Drive Encoder Value", rightEncoder.getPosition() * kDriveTick2Feet);
     SmartDashboard.putNumber("Encoder Value", encoder.get() * kDriveTick2Feet);
   }
 
@@ -104,8 +107,8 @@ public class Robot extends TimedRobot {
     //startTime = Timer.getFPGATimestamp();
 
 // Reset Encoders to zero
-    leftMaster.setSelectedSensorPosition(0, 0, 10);
-    rightMaster.setSelectedSensorPosition(0, 0, 10);
+    leftencoder.setPosition(0);
+    rightencoder.setPosition(0);
 
     encoder.reset();
     errorSum = 0;
@@ -139,8 +142,8 @@ public class Robot extends TimedRobot {
 
     double outputSpeed = kP * error + kI * errorSum + kD * errorRate;
 
-    double leftPosition = leftMaster.getSelectedSensorPosition() * kDriveTick2Feet;
-    double rightPosition = rightMaster.getSelectedSensorPosition() * kDriveTick2Feet;
+    double leftPosition = leftEncoder.getPosition() * kDriveTick2Feet;
+    double rightPosition = rightEncoder.getPosition() * kDriveTick2Feet;
     double distance = (leftPosition + rightPosition) / 2;
 
     if (distance < 5) {
