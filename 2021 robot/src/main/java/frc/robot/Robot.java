@@ -15,6 +15,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PWMSparkMax;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 //import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -52,10 +53,9 @@ public class Robot extends TimedRobot {
   private CANEncoder leftEncoder;
   private CANEncoder rightEncoder;
 
-
 // Unit conversion
   private final double kDriveTick2Feet = 1.0 / 4096 * 6 * Math.PI / 12;
-  private 
+
 
 
   @Override
@@ -79,9 +79,6 @@ public class Robot extends TimedRobot {
     leftMaster.setSelectedSensorPosition(0, 0, 10);
     rightMaster.setSelectedSensorPosition(0, 0, 10);
 
-// Set Encoder Boundary Limits: to stop motors
-    
-
 
 // Deadband
     drivechain.setDeadband(0.05);
@@ -98,6 +95,7 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Left Drive Encoder Value", leftMaster.getSelectedSensorPosition() * kDriveTick2Feet);
     SmartDashboard.putNumber("Right Drive Encoder Value", RightMaster.getSelectedSensorPosition() * kDriveTick2Feet);
+    SmartDashboard.putNumber("Encoder Value", encoder.get() * kDriveTick2Feet);
   }
 
   @Override
@@ -108,10 +106,33 @@ public class Robot extends TimedRobot {
 // Reset Encoders to zero
     leftMaster.setSelectedSensorPosition(0, 0, 10);
     rightMaster.setSelectedSensorPosition(0, 0, 10);
+
+    encoder.reset();
+    errorSum = 0;
+    lastTimestamp = Timer.getFPGATimestamp();
   }
+
+// PID
+  final double kP = 0.5;
+  final double kI = 0;
+
+  double setpoint = 0;
+  double errorSum = 0;
+  double lastTimestamp = 0;
 
   @Override
   public void autonomousPeriodic() {
+// Get Sensor Position
+    double sensorPosition = encoder.get() * kDriveTick2Feet;
+
+// Calculations
+    double error = setpoint - sensorPosition;
+    double dt = Timer.getFPGATimestamp() - lastTimestamp;
+
+    errorSum += error * dt;
+
+    double outputSpeed = kP * error;
+
     double leftPosition = leftMaster.getSelectedSensorPosition() * kDriveTick2Feet;
     double rightPosition = rightMaster.getSelectedSensorPosition() * kDriveTick2Feet;
     double distance = (leftPosition + rightPosition) / 2;
