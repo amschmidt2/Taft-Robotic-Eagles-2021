@@ -109,16 +109,18 @@ public class Robot extends TimedRobot {
 
     encoder.reset();
     errorSum = 0;
-    lastTimestamp = Timer.getFPGATimestamp();
   }
 
 // PID
   final double kP = 0.5;
-  final double kI = 0;
+  final double kI = 5;
+  final double kD = 0.01;
+  final double iLimit = 1;
 
   double setpoint = 0;
   double errorSum = 0;
   double lastTimestamp = 0;
+  double lastError = 0;
 
   @Override
   public void autonomousPeriodic() {
@@ -129,21 +131,30 @@ public class Robot extends TimedRobot {
     double error = setpoint - sensorPosition;
     double dt = Timer.getFPGATimestamp() - lastTimestamp;
 
+    if (Math.abs(error) < iLimit) {
     errorSum += error * dt;
+    }
 
-    double outputSpeed = kP * error;
+    double errorRate = (error - lastError) / dt;
+
+    double outputSpeed = kP * error + kI * errorSum + kD * errorRate;
 
     double leftPosition = leftMaster.getSelectedSensorPosition() * kDriveTick2Feet;
     double rightPosition = rightMaster.getSelectedSensorPosition() * kDriveTick2Feet;
     double distance = (leftPosition + rightPosition) / 2;
 
-    if (distance < 10) {
+    if (distance < 5) {
       drive.tankDrive(0.6, 0.6);
     }
 
     else {
       drive.tankDrive(0, 0);
     }
+
+// Updated last Variables
+    lastTimestamp = Timer.getFPGATimestamp();
+    lastError = error;
+
 
     /*double DELAY_TIME = 1;
     
