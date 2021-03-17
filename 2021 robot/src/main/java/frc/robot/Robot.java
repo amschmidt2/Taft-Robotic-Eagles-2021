@@ -65,22 +65,17 @@ public class Robot extends TimedRobot {
     
     leftEncoder = leftMotor.getEncoder();
     rightEncoder = rightMotor.getEncoder();
+
+    //was this supposed to be inversion?
+    // leftEncoder.setInverted(true);
     
-    leftEncoder = leftMotor.getEncoder(EncoderType.kQuadrature, 4096);
-    rightEncoder = rightMotor.getEncoder(EncoderType.kQuadrature, 4096);
+    // leftMotor.setSensorPhase(false);
+    // rightMotor.setSensorPhase(true);
 
-// Encoder Set up
-    leftEncoder = leftMotor.getEncoder();
-    rightEncoder = rightMotor.getEncoder();
-
-    leftEncoder = leftMotor.getEncoder(EncoderType.kQuadrature, 4096);
-    rightEncoder = rightMotor.getEncoder(EncoderType.kQuadrature, 4096);
-
-    leftMotor.setSensorPhase(false);
-    rightMotor.setSensorPhase(true);
-
-    leftMotor.setSelectedSensorPosition(0, 0, 10);
-    rightMotor.setSelectedSensorPosition(0, 0, 10);
+    // are you trying to zero things?
+    leftEncoder.setPosition(0.0);
+    // leftMotor.setSelectedSensorPosition(0, 0, 10);
+    // rightMotor.setSelectedSensorPosition(0, 0, 10);
 
 
 // Deadband
@@ -107,10 +102,9 @@ public class Robot extends TimedRobot {
     //startTime = Timer.getFPGATimestamp();
 
 // Reset Encoders to zero
-    leftencoder.setPosition(0);
-    rightencoder.setPosition(0);
+    leftEncoder.setPosition(0);
+    rightEncoder.setPosition(0);
 
-    encoder.reset();
     errorSum = 0;
   }
 
@@ -128,7 +122,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
 // Get Sensor Position
-    double sensorPosition = encoder.get() * kDriveTick2Feet;
+    double sensorPosition = leftEncoder.get() * kDriveTick2Feet;
 
 // Calculations
     double error = setpoint - sensorPosition;
