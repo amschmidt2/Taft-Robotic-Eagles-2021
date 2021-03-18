@@ -107,8 +107,8 @@ public class Robot extends TimedRobot {
     //startTime = Timer.getFPGATimestamp();
 
 // Reset Encoders to zero
-    leftencoder.setPosition(0);
-    rightencoder.setPosition(0);
+    leftEncoder.setPosition(0);
+    rightEncoder.setPosition(0);
 
     encoder.reset();
     errorSum = 0;
