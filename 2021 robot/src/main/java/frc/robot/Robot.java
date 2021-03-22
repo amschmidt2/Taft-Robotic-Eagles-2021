@@ -37,18 +37,48 @@ public class Robot extends TimedRobot {
     NetworkTableEntry tx = table.getEntry("tx");
     NetworkTableEntry ty = table.getEntry("ty");
     NetworkTableEntry ta = table.getEntry("ta");
+    NetworkTableEntry tv = table.getEntry("tv");
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("<variablename>").getDouble(0);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("<variablename>").setNumber(0);
+    
+
+
+//SEEKING WITH LIMELIGHT
+std::shared_ptr<NetworkTable> table = NetworkTable::GetTable("limelight");
+float tv = table->GetNumber("tv");
+float tx = table->GetNumber("tx");
+
+float steering_adjust = 0.0f;
+if (tv == 0.0f)
+{
+        // We don't see the target, seek for the target by spinning in place at a safe speed.
+        steering_adjust = 0.3f;
+}
+else
+{
+        // We do see the target, execute aiming code
+        float heading_error = tx;
+        steering_adjust = Kp * tx;
+}
+
+left_command+=steering_adjust;
+right_command-=steering_adjust;
+//SEEKIMG WITH LIMELIGHT
+
 
 //read values periodically
     double x = tx.getDouble(0.0);
     double y = ty.getDouble(0.0);
-   double area = ta.getDouble(0.0);
+    double area = ta.getDouble(0.0);
+    double targets = tv.getDouble(0.0);
 
 //post to smart dashboard periodically
     SmartDashboard.putNumber("LimelightX", x);
     SmartDashboard.putNumber("LimelightY", y);
     SmartDashboard.putNumber("LimelightArea", area);
   }
-
+  
+  
   @Override
   public void robotPeriodic() {}
 
@@ -86,4 +116,3 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {}
-}
