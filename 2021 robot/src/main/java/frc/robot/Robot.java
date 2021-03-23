@@ -62,17 +62,10 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     leftshooter.setInverted(true); //Sets the left motor to be inverted
 
-    
-    leftEncoder = leftMotor.getEncoder();
-    rightEncoder = rightMotor.getEncoder();
-    
-    leftEncoder = leftMotor.getEncoder(EncoderType.kQuadrature, 4096);
-    rightEncoder = rightMotor.getEncoder(EncoderType.kQuadrature, 4096);
-
 // Encoder Set up
     leftEncoder = leftMotor.getEncoder();
     rightEncoder = rightMotor.getEncoder();
-
+    
     leftEncoder = leftMotor.getEncoder(EncoderType.kQuadrature, 4096);
     rightEncoder = rightMotor.getEncoder(EncoderType.kQuadrature, 4096);
 
@@ -98,7 +91,6 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Left Drive Encoder Value", leftEncoder.getPosition() * kDriveTick2Feet);
     SmartDashboard.putNumber("Right Drive Encoder Value", rightEncoder.getPosition() * kDriveTick2Feet);
-    SmartDashboard.putNumber("Encoder Value", encoder.get() * kDriveTick2Feet);
   }
 
   @Override
@@ -110,7 +102,8 @@ public class Robot extends TimedRobot {
     leftEncoder.setPosition(0);
     rightEncoder.setPosition(0);
 
-    encoder.reset();
+    leftEncoder.reset();
+    rightEncoder.reset();
     errorSum = 0;
   }
 
@@ -128,7 +121,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
 // Get Sensor Position
-    double sensorPosition = encoder.get() * kDriveTick2Feet;
+    double sensorPosition = leftEncoder.getPosition() * kDriveTick2Feet;
 
 // Calculations
     double error = setpoint - sensorPosition;
@@ -147,11 +140,11 @@ public class Robot extends TimedRobot {
     double distance = (leftPosition + rightPosition) / 2;
 
     if (distance < 5) {
-      drive.tankDrive(0.6, 0.6);
+      drivechain.tankDrive(0.6, 0.6);
     }
 
     else {
-      drive.tankDrive(0, 0);
+      drivechain.tankDrive(0, 0);
     }
 
 // Updated last Variables
