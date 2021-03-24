@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -26,62 +28,36 @@ public class Robot extends TimedRobot {
 
   private Jaguar leftMotor = new Jaguar(0);
   private Jaguar rightMotor = new Jaguar(1);
-
   private Joystick joy1 = new Joystick(0);
-
+  DifferentialDrive robotDrive;
+  
+  // For network communication (limelight/RasPI Camera)
+  NetworkTableInstance netInstance;
+  NetworkTable table, limeTable;
+  NetworkTableEntry xLoc, limeX, limeY, limeTargetArea, camMode, lightMode;
+  
+  //Autonomous Timer
+  Timer autoTimer = new Timer();
 
   @Override
   public void robotInit() {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     NetworkTableEntry tx = table.getEntry("tx");
     NetworkTableEntry ty = table.getEntry("ty");
+    camMode = limeTable.getEntry("camMode");
+    lightMode = limeTable.getEntry("ledMode");
     NetworkTableEntry ta = table.getEntry("ta");
     NetworkTableEntry tv = table.getEntry("tv");
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("<variablename>").getDouble(0);
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("<variablename>").setNumber(<value>);
+    robotDrive = new DifferentialDrive(leftMotor, rightMotor);
+    joy1 = new Joystick(0);
+  }
     
-
-
-//SEEKING WITH LIMELIGHT
-std::shared_ptr<NetworkTable> table = NetworkTable::GetTable("limelight");
-float tv = table->GetNumber("tv");
-float tx = table->GetNumber("tx");
-
-float steering_adjust = 0.0f;
-if (tv == 0.0f)
-{
-        // We don't see the target, seek for the target by spinning in place at a safe speed.
-        steering_adjust = 0.3f;
-}
-else
-{
-        // We do see the target, execute aiming code
-        float heading_error = tx;
-        steering_adjust = Kp * tx;
-}
-
-left_command+=steering_adjust;
-right_command-=steering_adjust;
-//SEEKIMG WITH LIMELIGHT
-
-
-//read values periodically
-    double x = tx.getDouble(0.0);
-    double y = ty.getDouble(0.0);
-    double area = ta.getDouble(0.0);
-    double value = tv.getDouble(0.0);
-
-//post to smart dashboard periodically
-    SmartDashboard.putNumber("LimelightX", x);
-    SmartDashboard.putNumber("LimelightY", y);
-    SmartDashboard.putNumber("LimelightArea", area);
-    SmartDashboard.putNumber("LimelightValue", value);
+  @Override
+  public void robotPeriodic() {
+  
   }
   
-  
-  @Override
-  public void robotPeriodic() {}
-
   @Override
   public void autonomousInit() {}
 
@@ -103,7 +79,32 @@ right_command-=steering_adjust;
 
     leftMotor.set(left);
     rightMotor.set(right);
+
+    if (joy1.getRawButton(1)) {
+      double dx = limeTable.getEntry("tx").getDouble(-1000);
+
+      System.out.println("Limeline Target X Value:" + dx);
+
+      //if no value do nothing
+      if(dx == -1000)
+      {
+        robotDrive.arcadeDrive(0, 0);
+      }else if (dx < 1)     //ADJUST THESE VALUES! (TARGET ERROR ALLOWANCE)
+      {
+        robotDrive.arcadeDrive(0,-0.3); //ADJUST THESE VALUES(TURN RATE)!
+      }else if (dx > 1)   //ADJUST THESE VALUES! (TARGET ERROR ALLOWANCE)
+      {
+        robotDrive.arcadeDrive(0,0.3); //ADJUST THESE VALUES(TURN RATE)!
+      }
+      
+    } else   //otherwise just drive if button 1 is not pressed
+      robotDrive.arcadeDrive(joy1.getY(), -joy1.getZ());
+      
+      robotDrive.arcadeDrive(0,-0.3); //ADJUST THESE VALUES (TURN RATE)
+  robotDrive.arcadeDrive(0,0.3); //ADJUST THESE VALUES (TURN RATE)!
   }
+
+  
 
   @Override
   public void disabledInit() {}
@@ -115,4 +116,19 @@ right_command-=steering_adjust;
   public void testInit() {}
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {}  // The following is a simple cascasding/linear timer-based state machine
+  //    add timer checks for each phase of your auto choreography
+  //    adjust the timers as needed.
+  public void timedAuto()
+  {
+    if(autoTimer.get() < 1.0) // for the first second go forward
+    {
+      robotDrive.arcadeDrive(0.5, 0);
+    }else if (autoTimer.get()< 2){  //then spin on axis
+      robotDrive.arcadeDrive(0, 0.5);
+    }else                           // default is we go idle
+    {
+      robotDrive.arcadeDrive(0, 0);
+    }
+  }
+}  
