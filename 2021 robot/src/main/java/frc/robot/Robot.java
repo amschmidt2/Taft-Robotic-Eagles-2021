@@ -112,7 +112,7 @@ public class Robot extends TimedRobot {
 //set intake to left and right trigger   
      if (intake_in){
       intake.set(ControlMode.PercentOutput, .5);
-      arm.set(ControlMode.PercentOutput, -.2);
+      arm.set(ControlMode.PercentOutput, -.5);
      }  
 
      else if (intake_out){
