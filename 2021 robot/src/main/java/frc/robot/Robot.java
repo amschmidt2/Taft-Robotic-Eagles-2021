@@ -85,11 +85,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    boolean shooterspeed0 = joy1.getRawButton(5); // xbox right bumper
-    boolean arm_up = joy1.getRawButton(6); // xbox A
-    boolean arm_down = joy1.getRawButton(2); //xbox X
+    boolean shooterspeed0 = joy1.getRawButton(1); // xbox right bumper
+    boolean arm_up = joy1.getRawButton(2); // xbox A
+    boolean arm_down = joy1.getRawButton(3); //xbox X
     boolean conveyorup = joy1.getRawButton(4); //UNKNOWN
-    boolean conveyordown = joy1.getRawButton(7); //UNKNOWN
+    boolean conveyordown = joy1.getRawButton(6); //UNKNOWN
+    boolean intake_in = joy1.getRawButton(5);
+    boolean intake_out = joy1.getRawButton(8);
+    
 
 // Runs the Conveyor
     if (conveyorup) {
@@ -110,7 +113,17 @@ public class Robot extends TimedRobot {
 
 //set intake to left and right trigger   
 
+     if (intake_in){
       intake.set(ControlMode.PercentOutput, .5);
+     }  
+     else if (intake_out){
+      intake.set(ControlMode.PercentOutput, -.5);
+     }
+
+     else {
+       
+     }
+
 
     double flywheel = 0.45; //flywheel speed
     double flywheelstop = 0;
