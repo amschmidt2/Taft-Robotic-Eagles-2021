@@ -131,9 +131,20 @@ public class Robot extends TimedRobot {
       conveyer2.set(ControlMode.PercentOutput,.5);
     }
 
-    if (conveyordown) {
+    else {
+      conveyer1.set(ControlMode.PercentOutput,0);
+      conveyer2.set(ControlMode.PercentOutput,0);
+    }
+
+     if (conveyordown) {
       conveyer1.set(ControlMode.PercentOutput,.5);
       conveyer2.set(ControlMode.PercentOutput,-.5);
+    }
+
+    else {
+      conveyer1.set(ControlMode.PercentOutput,0);
+      conveyer2.set(ControlMode.PercentOutput,0);
+
     }
 
 //set intake to left and right trigger   
@@ -154,18 +165,24 @@ public class Robot extends TimedRobot {
     drivechain.tankDrive(left, right);
 
 //when intaking balls set the arm to turn toward the ground
-    if (joy1.getRawAxis(3) < 0.0){
-        arm.set(ControlMode.PercentOutput,-.1);
+ //   if (joy1.getRawAxis(3) < 0.0){
+   //     arm.set(ControlMode.PercentOutput,-.1);
 
-    }
+ //   }
 
 //control the arm up and down
     if (arm_up){
       arm.set(ControlMode.PercentOutput,.5);
     }
+    else {
+      arm.set(ControlMode.PercentOutput,0);
+    }
 
     if (arm_down){
       arm.set(ControlMode.PercentOutput,-.5);
+    }
+    else {
+      arm.set(ControlMode.PercentOutput,0);
     }
 
 //when the shooter is pressed it powers at 0.45, or 45%
