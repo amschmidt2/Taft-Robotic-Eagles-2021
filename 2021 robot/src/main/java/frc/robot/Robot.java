@@ -92,14 +92,13 @@ public class Robot extends TimedRobot {
     boolean conveyordown = joy1.getRawButton(6); //UNKNOWN
     boolean intake_in = joy1.getRawButton(5);
     boolean intake_out = joy1.getRawButton(8);
-    
+
 
 // Runs the Conveyor
     if (conveyorup) {
       conveyer1.set(ControlMode.PercentOutput, -.5);
       conveyer2.set(ControlMode.PercentOutput, .5);
     }
-
 
      else if (conveyordown) {
       conveyer1.set(ControlMode.PercentOutput, .5);
@@ -123,10 +122,6 @@ public class Robot extends TimedRobot {
      else {
       intake.set(ControlMode.PercentOutput, 0);
      }
-
-
-    double flywheel = 0.45; //flywheel speed
-    double flywheelstop = 0;
 
 //driving and turn speed cap    
     double speed = -joy1.getRawAxis(1) * 0.6;
@@ -153,9 +148,15 @@ public class Robot extends TimedRobot {
       arm.set(ControlMode.PercentOutput, -.5);
     }
     
+    else {
+      arm.set(ControlMode.PercentOutput, 0);
+    }
 
 //when the shooter is pressed it powers at 0.45, or 45%
-    else if (shooterspeed0) {
+    double flywheel = 0.45; //flywheel speed
+    double flywheelstop = 0;
+
+    if (shooterspeed0) {
       leftshooter.set(flywheel);
       rightshooter.set(flywheel);
       System.out.println("speed"+flywheel);
@@ -164,8 +165,6 @@ public class Robot extends TimedRobot {
     else {
       leftshooter.set(flywheelstop);
       rightshooter.set(flywheelstop);
-      arm.set(ControlMode.PercentOutput, 0);
-      intake.set(ControlMode.PercentOutput, 0);
     }
   }
 
