@@ -69,12 +69,9 @@ public class Robot extends TimedRobot {
     leftEncoder = leftMotor.getEncoder(EncoderType.kQuadrature, 4096);
     rightEncoder = rightMotor.getEncoder(EncoderType.kQuadrature, 4096);
 
-    leftMotor.setSensorPhase(false);
-    rightMotor.setSensorPhase(true);
-
-    leftMotor.setSelectedSensorPosition(0, 0, 10);
-    rightMotor.setSelectedSensorPosition(0, 0, 10);
-
+// Reset Encoders to zero
+    leftEncoder.setPosition(0);
+    rightEncoder.setPosition(0);
 
 // Deadband
     drivechain.setDeadband(0.05);
@@ -98,12 +95,6 @@ public class Robot extends TimedRobot {
     enableMotors(true);
     //startTime = Timer.getFPGATimestamp();
 
-// Reset Encoders to zero
-    leftEncoder.setPosition(0);
-    rightEncoder.setPosition(0);
-
-    leftEncoder.reset();
-    rightEncoder.reset();
     errorSum = 0;
   }
 
