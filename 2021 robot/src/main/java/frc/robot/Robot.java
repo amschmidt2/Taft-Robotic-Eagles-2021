@@ -74,41 +74,7 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     /*double DELAY_TIME = 1;
     
-    double time = Timer.getFPGATimestamp();
-
-    if (time - startTime < 3) {
-    leftMotor.set(0);
-    rightMotor.set(0.6);
-  }
-
-  delay(DELAY_TIME);
-
-  if ((time - startTime >3) && (time - startTime < 6)) {
-    leftMotor.set(0.6);
-    rightMotor.set(0);
-  }
-
-  delay(DELAY_TIME);
-
-  if ((time - startTime > 6) && (time -startTime < 11 )) {
-    leftMotor.set(0.6);
-    rightMotor.set(0);
-  }
-
-  /*if (time - startTime < 13) {
-    leftMotor.set(0.7);
-    rightMotor.set(0.1);
-  }
-
-  if (time - startTime <14) {
-    leftMotor.set(0.3);
-    rightMotor.set(0.6);    
-  }
-
-    else {
-    leftMotor.set(0);
-    rightMotor.set(0);
-    }*/
+    double time = Timer.getFPGATimestamp();*/
   }
 
   @Override
@@ -127,29 +93,24 @@ public class Robot extends TimedRobot {
 
 // Runs the Conveyor
     if (conveyorup) {
-      conveyer1.set(ControlMode.PercentOutput,-.5);
-      conveyer2.set(ControlMode.PercentOutput,.5);
+      conveyer1.set(ControlMode.PercentOutput, -.5);
+      conveyer2.set(ControlMode.PercentOutput, .5);
+    }
+
+
+     else if (conveyordown) {
+      conveyer1.set(ControlMode.PercentOutput, .5);
+      conveyer2.set(ControlMode.PercentOutput, -.5);
     }
 
     else {
-      conveyer1.set(ControlMode.PercentOutput,0);
-      conveyer2.set(ControlMode.PercentOutput,0);
-    }
-
-     if (conveyordown) {
-      conveyer1.set(ControlMode.PercentOutput,.5);
-      conveyer2.set(ControlMode.PercentOutput,-.5);
-    }
-
-    else {
-      conveyer1.set(ControlMode.PercentOutput,0);
-      conveyer2.set(ControlMode.PercentOutput,0);
-
+      conveyer1.set(ControlMode.PercentOutput, 0);
+      conveyer1.set(ControlMode.PercentOutput, 0);
     }
 
 //set intake to left and right trigger   
 
-      intake.set(ControlMode.PercentOutput,.5);
+      intake.set(ControlMode.PercentOutput, .5);
 
     double flywheel = 0.45; //flywheel speed
     double flywheelstop = 0;
@@ -172,21 +133,16 @@ public class Robot extends TimedRobot {
 
 //control the arm up and down
     if (arm_up){
-      arm.set(ControlMode.PercentOutput,.5);
-    }
-    else {
-      arm.set(ControlMode.PercentOutput,0);
+      arm.set(ControlMode.PercentOutput, .5);
     }
 
-    if (arm_down){
-      arm.set(ControlMode.PercentOutput,-.5);
+    else if (arm_down){
+      arm.set(ControlMode.PercentOutput, -.5);
     }
-    else {
-      arm.set(ControlMode.PercentOutput,0);
-    }
+    
 
 //when the shooter is pressed it powers at 0.45, or 45%
-    if (shooterspeed0) {
+    else if (shooterspeed0) {
       leftshooter.set(flywheel);
       rightshooter.set(flywheel);
       System.out.println("speed"+flywheel);
@@ -195,10 +151,8 @@ public class Robot extends TimedRobot {
     else {
       leftshooter.set(flywheelstop);
       rightshooter.set(flywheelstop);
-      arm.set(ControlMode.PercentOutput,0);
-      intake.set(ControlMode.PercentOutput,0);
-      conveyer1.set(ControlMode.PercentOutput,0);
-      conveyer1.set(ControlMode.PercentOutput,0);
+      arm.set(ControlMode.PercentOutput, 0);
+      intake.set(ControlMode.PercentOutput, 0);
     }
   }
 
