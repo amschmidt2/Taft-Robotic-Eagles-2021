@@ -108,7 +108,7 @@ public class Robot extends TimedRobot {
 
     else {
       conveyer1.set(ControlMode.PercentOutput, 0);
-      conveyer1.set(ControlMode.PercentOutput, 0);
+      conveyer2.set(ControlMode.PercentOutput, 0);
     }
 
 //set intake to left and right trigger   
@@ -121,7 +121,7 @@ public class Robot extends TimedRobot {
      }
 
      else {
-       
+      intake.set(ControlMode.PercentOutput, 0);
      }
 
 
