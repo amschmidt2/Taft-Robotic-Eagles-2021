@@ -84,11 +84,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    boolean shooterspeed = joy1.getRawButton(1); // xbox right bumper
-    boolean arm_up = joy1.getRawButton(2); // xbox A
-    boolean arm_down = joy1.getRawButton(3); //xbox X
+    boolean shooterspeed = joy1.getRawButton(6); // xbox right bumper
+    boolean arm_up = joy1.getRawButton(3); // xbox A
+    boolean arm_down = joy1.getRawButton(2); //xbox X
     boolean conveyorup = joy1.getRawButton(4); //UNKNOWN
-    boolean conveyordown = joy1.getRawButton(6); //UNKNOWN
+    boolean conveyordown = joy1.getRawButton(1); //UNKNOWN
     boolean intake_in = joy1.getRawButton(5);
     boolean intake_out = joy1.getRawButton(8);
 
