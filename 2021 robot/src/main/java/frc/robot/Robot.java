@@ -80,12 +80,11 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     leftshooter.setInverted(true);
-    
   }
 
   @Override
   public void teleopPeriodic() {
-    boolean shooterspeed0 = joy1.getRawButton(1); // xbox right bumper
+    boolean shooterspeed = joy1.getRawButton(1); // xbox right bumper
     boolean arm_up = joy1.getRawButton(2); // xbox A
     boolean arm_down = joy1.getRawButton(3); //xbox X
     boolean conveyorup = joy1.getRawButton(4); //UNKNOWN
@@ -111,10 +110,11 @@ public class Robot extends TimedRobot {
     }
 
 //set intake to left and right trigger   
-
      if (intake_in){
       intake.set(ControlMode.PercentOutput, .5);
+      arm.set(ControlMode.PercentOutput, -.2);
      }  
+
      else if (intake_out){
       intake.set(ControlMode.PercentOutput, -.5);
      }
@@ -156,7 +156,7 @@ public class Robot extends TimedRobot {
     double flywheel = 0.45; //flywheel speed
     double flywheelstop = 0;
 
-    if (shooterspeed0) {
+    if (shooterspeed) {
       leftshooter.set(flywheel);
       rightshooter.set(flywheel);
       System.out.println("speed"+flywheel);
