@@ -161,7 +161,7 @@ public class Robot extends TimedRobot {
     double flywheel0 = 0.50; //flywheel speed
     double flywheel1 = 0.55; //flywheel speed
     double flywheel2 = 0.60; //flywheel speed
-    double flywheel3 = 0.65; //flywheel speed
+    double flywheel3 = 0.45; //flywheel speed
 
     double flywheelstop = 0;
 
