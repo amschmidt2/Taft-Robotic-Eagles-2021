@@ -29,36 +29,31 @@ public class Robot extends TimedRobot {
   private Jaguar leftMotor = new Jaguar(0);
   private Jaguar rightMotor = new Jaguar(1);
   private Joystick joy1 = new Joystick(0);
-<<<<<<< HEAD
-  DifferentialDrive robotDrive;
 
 
   // For network communication (limelight/RasPI Camera)
-=======
+
   
   // For network communication (limelight/RasPI Camera)
   NetworkTable limeTable;
   NetworkTableEntry camMode, lightMode;
->>>>>>> 15c5f3abf302e16016c675c4e76fffc5cf677562
   
-  NetworkTable limeTable;
-  NetworkTableEntry camMode, lightMode;
+  
 
   //Autonomous Timer
   Timer autoTimer = new Timer();
 
   @Override
   public void robotInit() {
-<<<<<<< HEAD
+
     NetworkTable limeTable = NetworkTableInstance.getDefault().getTable("limelight");
     camMode = limeTable.getEntry("camMode");
     lightMode = limeTable.getEntry("ledMode");
-=======
+
     limeTable = NetworkTableInstance.getDefault().getTable("limelight");
     camMode = limeTable.getEntry("camMode");
     lightMode = limeTable.getEntry("ledMode");
 
->>>>>>> 15c5f3abf302e16016c675c4e76fffc5cf677562
     joy1 = new Joystick(0);
   }
     
@@ -84,7 +79,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-<<<<<<< HEAD
+
    
   // IF we are pressing the trigger (button 1) we test vision
   if (joy1.getRawButton(1)) {
@@ -126,82 +121,7 @@ public class Robot extends TimedRobot {
 
     leftMotor.set(left);
     rightMotor.set(right);
-=======
 
-    // IF we are pressing the trigger (button 1) we test vision
-    if (joy1.getRawButton(1)) {
-      double dx = limeTable.getEntry("tx").getDouble(-1000);
-
-      System.out.println("Limeline Target X-Value:" + dx);
-
-      //if no value do nothing
-      if(dx == -1000)
-      {
-        System.out.println("No target found on Limelight.");
-        leftMotor.set(0);
-        rightMotor.set(0);
-      }else if (dx < -1)     //ADJUST THESE VALUES! (TARGET ERROR ALLOWANCE)
-      {
-        System.out.println("Turning LEFT");
-        leftMotor.set(-0.3);
-        rightMotor.set(0.3);
-      }else if (dx > 1)   //ADJUST THESE VALUES! (TARGET ERROR ALLOWANCE)
-      {
-        System.out.println("Turning RIGHT");
-        leftMotor.set(0.3);
-        rightMotor.set(-0.3);
-      }else
-      {
-        System.out.println("ON TARGET!");
-        leftMotor.set(0);
-        rightMotor.set(0);
-      }
-      
-    } else   //otherwise just drive if button 1 is not pressed
-    {
-
-      double speed = -joy1.getRawAxis(1) * 0.6;
-      double turn = -joy1.getRawAxis(0) * 0.3;
-
-      double left = speed + turn;
-      double right = speed - turn;
-
-      leftMotor.set(left);
-      rightMotor.set(right);
-    }
-   
->>>>>>> 15c5f3abf302e16016c675c4e76fffc5cf677562
-  }
- 
-}
-  
-
-  @Override
-  public void disabledInit() {}
-
-  @Override
-  public void disabledPeriodic() {}
-
-  @Override
-  public void testInit() {}
-
-  @Override
-  public void testPeriodic() {}  // The following is a simple cascasding/linear timer-based state machine
-  //    add timer checks for each phase of your auto choreography
-  //    adjust the timers as needed.
-  public void timedAuto()
-  {
-    if(autoTimer.get() < 1.0) // for the first second go forward
-    {
-      leftMotor.set(0.5);
-      rightMotor.set(0);
-    }else if (autoTimer.get()< 2){  //then spin on axis
-      leftMotor.set(0);
-      rightMotor.set(0.5);
-    }else                           // default is we go idle
-    {
-      leftMotor.set(0);
-      rightMotor.set(0);
     }
   }
 }  
