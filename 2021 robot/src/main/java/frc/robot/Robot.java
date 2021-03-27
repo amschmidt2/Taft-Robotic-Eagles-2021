@@ -95,7 +95,8 @@ public class Robot extends TimedRobot {
     enableMotors(true);
     //startTime = Timer.getFPGATimestamp();
 
-    errorSum = 0;
+    lefterrorSum = 0;
+    righterrorSum = 0;
   }
 
 // PID
@@ -105,26 +106,39 @@ public class Robot extends TimedRobot {
   final double iLimit = 1;
 
   double setpoint = 0;
-  double errorSum = 0;
+  double lefterrorSum = 0;
+  double righterrorSum = 0;
   double lastTimestamp = 0;
-  double lastError = 0;
+  double leftlastError = 0;
+  double rightlastError = 0;
 
   @Override
   public void autonomousPeriodic() {
 // Get Sensor Position
-    double sensorPosition = leftEncoder.getPosition() * kDriveTick2Feet;
+    double leftsensorPosition = leftEncoder.getPosition() * kDriveTick2Feet;
+    double rightsensorPosition = rightEncoder.getPosition() * kDriveTick2Feet;
 
 // Calculations
-    double error = setpoint - sensorPosition;
-    double dt = Timer.getFPGATimestamp() - lastTimestamp;
+    double lefterror = setpoint - leftsensorPosition;
+    double leftdt = Timer.getFPGATimestamp() - lastTimestamp;
 
-    if (Math.abs(error) < iLimit) {
-    errorSum += error * dt;
+    double righterror = setpoint - rightsensorPosition;
+    double rightdt = Timer.getFPGATimestamp() - lastTimestamp;
+
+    if (Math.abs(lefterror) < iLimit) {
+    lefterrorSum += lefterror * leftdt;
     }
 
-    double errorRate = (error - lastError) / dt;
+    else if (Math.abs(righterror) < iLimit) {
+    righterrorSum += righterror * rightdt;
+    }
 
-    double outputSpeed = kP * error + kI * errorSum + kD * errorRate;
+    double lefterrorRate = (lefterror - leftlastError) / leftdt;
+
+    double righterrorRate = (righterror - rightlastError) / rightdt;
+    
+    double leftoutputSpeed = kP * lefterror + kI * lefterrorSum + kD * lefterrorRate;
+    double rightoutputSpeed = kP * righterror + kI * righterrorSum + kD * righterrorRate;
 
     double leftPosition = leftEncoder.getPosition() * kDriveTick2Feet;
     double rightPosition = rightEncoder.getPosition() * kDriveTick2Feet;
@@ -140,8 +154,9 @@ public class Robot extends TimedRobot {
 
 // Updated last Variables
     lastTimestamp = Timer.getFPGATimestamp();
-    lastError = error;
-
+    leftlastError = lefterror;
+    rightlastError = righterror;
+    
 
     /*double DELAY_TIME = 1;
     
