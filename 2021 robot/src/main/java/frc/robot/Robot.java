@@ -145,7 +145,7 @@ public class Robot extends TimedRobot {
     double distance = (leftPosition + rightPosition) / 2;
 
     if (distance < 5) {
-      drivechain.tankDrive(0.6, 0.6);
+      drivechain.tankDrive(leftoutputSpeed, rightoutputSpeed);
     }
 
     else {
@@ -232,7 +232,6 @@ public class Robot extends TimedRobot {
     else {
       mode = NeutralMode.Coast;
     }
-
      leftMotor.setNeutralMode(mode);
      rightMotor.setNeutralMode(mode);
 
