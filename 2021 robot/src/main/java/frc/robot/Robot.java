@@ -122,10 +122,12 @@ public class Robot extends TimedRobot {
 
      else if (intake_out){
       intake.set(ControlMode.PercentOutput, -.5);
+      arm.set(ControlMode.PercentOutput, .5);
      }
 
      else {
       intake.set(ControlMode.PercentOutput, 0);
+      arm.set(ControlMode.PercentOutput, 0);
      }
 
 //driving and turn speed cap    
@@ -158,12 +160,12 @@ public class Robot extends TimedRobot {
     }
 
 //when the shooter is pressed it powers at 0.50, or 50%; 0.55, or 55%; 0.60, or 60%; 0.65, or 65%
-    double flywheel0 = 0.50; //flywheel speed
-    double flywheel1 = 0.55; //flywheel speed
-    double flywheel2 = 0.60; //flywheel speed
-    double flywheel3 = 0.45; //flywheel speed
+    double flywheel0 = 0.45; //flywheel speed 45% Between E5 and E6 45%
+    double flywheel1 = 0.48; //flywheel speed 48% Between E6 and E7 48%
+    double flywheel2 = 0.50; //flywheel speed 50% Between E2 and E3 50%
+    double flywheel3 = 0.52; //flywheel speed 52% E9 52%
 
-    double flywheelstop = 0;
+    double flywheelstop = 0; //flywheel speed
 
     if (shooterspeed0) {
       leftshooter.set(flywheel0);
