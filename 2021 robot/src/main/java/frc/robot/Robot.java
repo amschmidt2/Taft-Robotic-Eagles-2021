@@ -7,12 +7,12 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -30,26 +30,21 @@ public class Robot extends TimedRobot {
   private Jaguar rightMotor = new Jaguar(1);
   private Joystick joy1 = new Joystick(0);
   DifferentialDrive robotDrive;
-  
+
+
   // For network communication (limelight/RasPI Camera)
-  NetworkTableInstance netInstance;
-  NetworkTable table, limeTable;
-  NetworkTableEntry xLoc, limeX, limeY, limeTargetArea, camMode, lightMode;
   
+  NetworkTable limeTable;
+  NetworkTableEntry camMode, lightMode;
+
   //Autonomous Timer
   Timer autoTimer = new Timer();
 
   @Override
   public void robotInit() {
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-    NetworkTableEntry tx = table.getEntry("tx");
-    NetworkTableEntry ty = table.getEntry("ty");
+    NetworkTable limeTable = NetworkTableInstance.getDefault().getTable("limelight");
     camMode = limeTable.getEntry("camMode");
     lightMode = limeTable.getEntry("ledMode");
-    NetworkTableEntry ta = table.getEntry("ta");
-    NetworkTableEntry tv = table.getEntry("tv");
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("<variablename>").getDouble(0);
-    robotDrive = new DifferentialDrive(leftMotor, rightMotor);
     joy1 = new Joystick(0);
   }
     
@@ -67,10 +62,47 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     rightMotor.setInverted(true);
+
+    lightMode.setNumber(3); // turn on LEDs
+    camMode.setNumber(0);   //set limelight to vision mode
   }
+  
 
   @Override
   public void teleopPeriodic() {
+   
+  // IF we are pressing the trigger (button 1) we test vision
+  if (joy1.getRawButton(1)) {
+    double dx = limeTable.getEntry("tx").getDouble(-1000);
+
+    System.out.println("Limeline Target X-Value:" + dx);
+
+    //if no value do nothing
+    if(dx == -1000)
+    {
+      System.out.println("No target found on Limelight.");
+      leftMotor.set(0);
+      rightMotor.set(0);
+    }else if (dx < -1)     //ADJUST THESE VALUES! (TARGET ERROR ALLOWANCE)
+    {
+      System.out.println("Turning LEFT");
+      leftMotor.set(-0.3);
+      rightMotor.set(0.3);
+    }else if (dx > 1)   //ADJUST THESE VALUES! (TARGET ERROR ALLOWANCE)
+    {
+      System.out.println("Turning RIGHT");
+      leftMotor.set(0.3);
+      rightMotor.set(-0.3);
+    }else
+    {
+      System.out.println("ON TARGET!");
+      leftMotor.set(0);
+      rightMotor.set(0);
+    }
+    
+  } else   //otherwise just drive if button 1 is not pressed
+  {
+
     double speed = -joy1.getRawAxis(1) * 0.6;
     double turn = -joy1.getRawAxis(0) * 0.3;
 
@@ -79,31 +111,9 @@ public class Robot extends TimedRobot {
 
     leftMotor.set(left);
     rightMotor.set(right);
-
-    if (joy1.getRawButton(1)) {
-      double dx = limeTable.getEntry("tx").getDouble(-1000);
-
-      System.out.println("Limeline Target X Value:" + dx);
-
-      //if no value do nothing
-      if(dx == -1000)
-      {
-        robotDrive.arcadeDrive(0, 0);
-      }else if (dx < 1)     //ADJUST THESE VALUES! (TARGET ERROR ALLOWANCE)
-      {
-        robotDrive.arcadeDrive(0,-0.3); //ADJUST THESE VALUES(TURN RATE)!
-      }else if (dx > 1)   //ADJUST THESE VALUES! (TARGET ERROR ALLOWANCE)
-      {
-        robotDrive.arcadeDrive(0,0.3); //ADJUST THESE VALUES(TURN RATE)!
-      }
-      
-    } else   //otherwise just drive if button 1 is not pressed
-      robotDrive.arcadeDrive(joy1.getY(), -joy1.getZ());
-      
-      robotDrive.arcadeDrive(0,-0.3); //ADJUST THESE VALUES (TURN RATE)
-  robotDrive.arcadeDrive(0,0.3); //ADJUST THESE VALUES (TURN RATE)!
   }
-
+ 
+}
   
 
   @Override
