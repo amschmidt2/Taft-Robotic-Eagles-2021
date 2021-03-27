@@ -46,7 +46,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-    NetworkTable limeTable = NetworkTableInstance.getDefault().getTable("limelight");
     camMode = limeTable.getEntry("camMode");
     lightMode = limeTable.getEntry("ledMode");
 
