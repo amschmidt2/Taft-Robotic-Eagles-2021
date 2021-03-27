@@ -53,6 +53,7 @@ public class Robot extends TimedRobot {
 
 //Joystick
   private Joystick joy1 = new Joystick(0);
+  private Joystick joy2 = new Joystick(1);
 
   //private double startTime;
 
@@ -84,7 +85,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    boolean shooterspeed = joy1.getRawButton(6); // xbox right bumper
+    boolean shooterspeed0 = joy2.getRawButton(1); // xbox A
+    boolean shooterspeed1 = joy2.getRawButton(2); // xbox B
+    boolean shooterspeed2 = joy2.getRawButton(3); // xbox X
+    boolean shooterspeed3 = joy2.getRawButton(4); // xbox Y
+
     boolean arm_up = joy1.getRawButton(3); // xbox A
     boolean arm_down = joy1.getRawButton(2); //xbox X
     boolean conveyorup = joy1.getRawButton(4); //UNKNOWN
@@ -152,14 +157,36 @@ public class Robot extends TimedRobot {
       arm.set(ControlMode.PercentOutput, 0);
     }
 
-//when the shooter is pressed it powers at 0.45, or 45%
-    double flywheel = 0.45; //flywheel speed
+//when the shooter is pressed it powers at 0.50, or 50%; 0.55, or 55%; 0.60, or 60%; 0.65, or 65%
+    double flywheel0 = 0.50; //flywheel speed
+    double flywheel1 = 0.55; //flywheel speed
+    double flywheel2 = 0.60; //flywheel speed
+    double flywheel3 = 0.65; //flywheel speed
+
     double flywheelstop = 0;
 
-    if (shooterspeed) {
-      leftshooter.set(flywheel);
-      rightshooter.set(flywheel);
-      System.out.println("speed"+flywheel);
+    if (shooterspeed0) {
+      leftshooter.set(flywheel0);
+      rightshooter.set(flywheel0);
+      System.out.println("Speed: " + flywheel0);
+    }
+
+    else if (shooterspeed1) {
+      leftshooter.set(flywheel1);
+      rightshooter.set(flywheel1);
+      System.out.println("Speed: " + flywheel1);
+    }
+
+    else if (shooterspeed2) {
+      leftshooter.set(flywheel2);
+      rightshooter.set(flywheel2);
+      System.out.println("Speed: " + flywheel2);
+    }
+
+    else if (shooterspeed3) {
+      leftshooter.set(flywheel3);
+      rightshooter.set(flywheel3);
+      System.out.println("Speed: " + flywheel3);
     }
    
     else {
