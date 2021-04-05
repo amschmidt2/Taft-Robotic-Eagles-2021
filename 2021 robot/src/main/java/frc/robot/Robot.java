@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import java.text.BreakIterator;
 
 //import static edu.wpi.first.wpilibj.Timer.delay;
 
@@ -91,6 +92,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    enableMotors(true);
     //startTime = Timer.getFPGATimestamp();
 
     lefterrorSum = 0;
@@ -175,7 +177,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    enableMotors(true);
+  }
 
   @Override
   public void teleopPeriodic() {
@@ -207,7 +211,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    enableMotors(false);
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -217,5 +223,19 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {}
+
+  private void enableMotors(boolean on) {
+    //IDLE MODE
+     mode;
+    if (on) {
+      mode = kBreak;
+    }
+    else {
+      mode = kcoast
+    }
+     leftMotor.setNeutralMode(mode);
+     rightMotor.setNeutralMode(mode);
+
+  }
 
 }
