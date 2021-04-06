@@ -46,8 +46,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-    camMode = limeTable.getEntry("camMode");
-    lightMode = limeTable.getEntry("ledMode");
 
     limeTable = NetworkTableInstance.getDefault().getTable("limelight");
     camMode = limeTable.getEntry("camMode");
@@ -84,6 +82,8 @@ public class Robot extends TimedRobot {
   if (joy1.getRawButton(1)) {
     double dx = limeTable.getEntry("tx").getDouble(-1000);
 
+      lightMode.setNumber(3); // turn on LEDs
+
     System.out.println("Limeline Target X-Value:" + dx);
 
     //if no value do nothing
@@ -92,12 +92,12 @@ public class Robot extends TimedRobot {
       System.out.println("No target found on Limelight.");
       leftMotor.set(0);
       rightMotor.set(0);
-    }else if (dx < -1)     //ADJUST THESE VALUES! (TARGET ERROR ALLOWANCE)
+    }else if (dx < -5)     //ADJUST THESE VALUES! (TARGET ERROR ALLOWANCE)
     {
       System.out.println("Turning LEFT");
       leftMotor.set(-0.3);
       rightMotor.set(0.3);
-    }else if (dx > 1)   //ADJUST THESE VALUES! (TARGET ERROR ALLOWANCE)
+    }else if (dx > 5)   //ADJUST THESE VALUES! (TARGET ERROR ALLOWANCE)
     {
       System.out.println("Turning RIGHT");
       leftMotor.set(0.3);
@@ -111,12 +111,14 @@ public class Robot extends TimedRobot {
     
   } else   //otherwise just drive if button 1 is not pressed
   {
+    
+      lightMode.setNumber(1); // turn OFF LEDs
 
     double speed = -joy1.getRawAxis(1) * 0.6;
     double turn = -joy1.getRawAxis(0) * 0.3;
 
-    double left = speed + turn;
-    double right = speed - turn;
+    double left = speed - turn;
+    double right = speed + turn;
 
     leftMotor.set(left);
     rightMotor.set(right);
