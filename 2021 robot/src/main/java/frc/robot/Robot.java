@@ -5,11 +5,17 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Jaguar;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.networktables.*;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 import edu.wpi.first.wpilibj.Timer;
 
@@ -20,108 +26,159 @@ import edu.wpi.first.wpilibj.Timer;
  * project.
  */
 public class Robot extends TimedRobot {
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
-
-  private Jaguar leftMotor = new Jaguar(0);
-  private Jaguar rightMotor = new Jaguar(1);
-  private Joystick joy1 = new Joystick(0);
-
-
-  // For network communication (limelight/RasPI Camera)
 
   
-  // For network communication (limelight/RasPI Camera)
+
+
+  private static final String kDefaultAuto = "Default";
+  private static final String kCustomAuto = "My Auto";
+  private String m_autoSelected;
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
+  private Jaguar leftmotor = new Jaguar(0);
+  private Jaguar rightmotor = new Jaguar(1);
+  private DifferentialDrive RobotDrive = new DifferentialDrive(leftmotor,rightmotor);
+
+  private XboxController m_Controller = new XboxController(0);
+
+  private boolean m_LimelightHasValidTarget = false;
+  private double m_LimelightDriveCommand = 0.0;
+  private double m_LimelightSteerCommand = 0.0;
+
   NetworkTable limeTable;
   NetworkTableEntry camMode, lightMode;
-  
-  
 
-  //Autonomous Timer
-  Timer autoTimer = new Timer();
+  Timer autoTImer = new Timer();
 
+  /**
+   * This function is run when the robot is first started up and should be
+   * used for any initialization code.
+   */
   @Override
   public void robotInit() {
 
+        limeTable = NetworkTableInstance.getDefault().getTable("limelight");
+        camMode = limeTable.getEntry("camMode");
+        lightMode = limeTable.getEntry("ledMode");
 
-    limeTable = NetworkTableInstance.getDefault().getTable("limelight");
-    camMode = limeTable.getEntry("camMode");
-    lightMode = limeTable.getEntry("ledMode");
-
-    joy1 = new Joystick(0);
+        m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
+        m_chooser.addOption("My Auto Auto", kCustomAuto);
+        SmartDashboard.putData("Auto choices", m_chooser);
   }
-    
+
+  /**
+   * This function is called every robot packet, no matter the mode. Use
+   * this for items like diagnostics that you want ran during disabled,
+   * autonomous, teleoperated and test.
+   *
+   * <p>This runs after the mode specific periodic functions, but before
+   * LiveWindow and SmartDashboard integrated updating.
+   */
   @Override
   public void robotPeriodic() {
-  
   }
-  
-  @Override
-  public void autonomousInit() {}
 
+  /**
+   * This autonomous (along with the chooser code above) shows how to select
+   * between different autonomous modes using the dashboard. The sendable
+   * chooser code works with the Java SmartDashboard. If you prefer the
+   * LabVIEW Dashboard, remove all of the chooser code and uncomment the
+   * getString line to get the auto name from the text box below the Gyro
+   *
+   * <p>You can add additional auto modes by adding additional comparisons to
+   * the switch structure below with additional strings. If using the
+   * SendableChooser make sure to add them to the chooser code above as well.
+   */
   @Override
-  public void autonomousPeriodic() {}
-
-  @Override
-  public void teleopInit() {
-    rightMotor.setInverted(true);
-
-    lightMode.setNumber(3); // turn on LEDs
-    camMode.setNumber(0);   //set limelight to vision mode
+  public void autonomousInit() {
+        m_autoSelected = m_chooser.getSelected();
   }
-  
 
+  /**
+   * This function is called periodically during autonomous.
+   */
+  @Override
+  public void autonomousPeriodic() {
+  }
+
+  /**
+   * This function is called periodically during operator control.
+   */
   @Override
   public void teleopPeriodic() {
 
-   
-  // IF we are pressing the trigger (button 1) we test vision
-  if (joy1.getRawButton(1)) {
-    double dx = limeTable.getEntry("tx").getDouble(-1000);
+        Update_Limelight_Tracking();
 
-      lightMode.setNumber(3); // turn on LEDs
+        double steer = m_Controller.getX(Hand.kRight);
+        double drive = -m_Controller.getY(Hand.kLeft);
+        boolean auto = m_Controller.getAButton();
 
-    System.out.println("Limeline Target X-Value:" + dx);
+        steer *= 0.70;
+        drive *= 0.70;
 
-    //if no value do nothing
-    if(dx == -1000)
-    {
-      System.out.println("No target found on Limelight.");
-      leftMotor.set(0);
-      rightMotor.set(0);
-    }else if (dx < -5)     //ADJUST THESE VALUES! (TARGET ERROR ALLOWANCE)
-    {
-      System.out.println("Turning LEFT");
-      leftMotor.set(-0.3);
-      rightMotor.set(0.3);
-    }else if (dx > 5)   //ADJUST THESE VALUES! (TARGET ERROR ALLOWANCE)
-    {
-      System.out.println("Turning RIGHT");
-      leftMotor.set(0.3);
-      rightMotor.set(-0.3);
-    }else
-    {
-      System.out.println("ON TARGET!");
-      leftMotor.set(0);
-      rightMotor.set(0);
-    }
-    
-  } else   //otherwise just drive if button 1 is not pressed
-  {
-    
-      lightMode.setNumber(1); // turn OFF LEDs
-
-    double speed = -joy1.getRawAxis(1) * 0.6;
-    double turn = -joy1.getRawAxis(0) * 0.3;
-
-    double left = speed - turn;
-    double right = speed + turn;
-
-    leftMotor.set(left);
-    rightMotor.set(right);
-
-    }
+        if (auto)
+        {
+          if (m_LimelightHasValidTarget)
+          {
+                RobotDrive.arcadeDrive(m_LimelightDriveCommand,m_LimelightSteerCommand);
+          }
+          else
+          {
+                RobotDrive.arcadeDrive(0.0,0.0);
+          }
+        }
+        else
+        {
+          RobotDrive.arcadeDrive(drive,steer);
+        }
   }
-}  
+
+  @Override
+  public void testPeriodic() {
+  }
+
+  /**
+   * This function implements a simple method of generating driving and steering commands
+   * based on the tracking data from a limelight camera.
+   */
+  public void Update_Limelight_Tracking()
+  {
+        // These numbers must be tuned for your Robot!  Be careful!
+        final double STEER_K = 0.03;                    // how hard to turn toward the target
+        final double DRIVE_K = 0.3;                    // how hard to drive fwd toward the target
+        final double DESIRED_TARGET_AREA = 50.0;        // Area of the target when the robot reaches the wall
+        final double MAX_DRIVE = 0.7;                   // Simple speed limit so we don't drive too fast
+
+        double tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
+        double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+        double ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
+        double ta = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0);
+
+        if (tv < 1.0)
+        {
+          m_LimelightHasValidTarget = false;
+          m_LimelightDriveCommand = 0.0;
+          m_LimelightSteerCommand = 0.0;
+          return;
+        }
+
+        m_LimelightHasValidTarget = true;
+
+        // Start with proportional steering
+        double steer_cmd = tx * STEER_K;
+        m_LimelightSteerCommand = steer_cmd;
+        System.out.println("Adjusting!");
+
+        // try to drive forward until the target area reaches our desired area
+        double drive_cmd = (DESIRED_TARGET_AREA - ta) * DRIVE_K;
+        System.out.println("On Target and Going!");
+
+        // don't let the robot drive too fast into the goal
+        if (drive_cmd > MAX_DRIVE)
+        {
+          drive_cmd = MAX_DRIVE;
+        }
+        m_LimelightDriveCommand = drive_cmd;
+        System.out.println("Slowing Down!");
+  }
+}
