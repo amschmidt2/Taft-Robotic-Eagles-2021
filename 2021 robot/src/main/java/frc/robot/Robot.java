@@ -80,6 +80,7 @@ public class Robot extends TimedRobot {
   // IF we are pressing the trigger (button 1) we test vision
   if (joy1.getRawButton(1)) {
     double dx = limeTable.getEntry("tx").getDouble(-1000);
+    double ta = limeTable.getEntry("ta").getDouble(0);
 
       lightMode.setNumber(3); // turn on LEDs
 
@@ -89,8 +90,8 @@ public class Robot extends TimedRobot {
     if(dx == -1000)
     {
       System.out.println("No target found on Limelight.");
-      leftMotor.set(0);
-      rightMotor.set(0);
+      leftMotor.set(0.1);
+      rightMotor.set(-0.1);
     }else if (dx < -5)     //ADJUST THESE VALUES! (TARGET ERROR ALLOWANCE)
     {
       System.out.println("Turning LEFT");
@@ -104,8 +105,8 @@ public class Robot extends TimedRobot {
     }else
     {
       System.out.println("ON TARGET!");
-      leftMotor.set(0);
-      rightMotor.set(0);
+      leftMotor.set((20- ta)*0.26);
+      rightMotor.set((20- ta)*0.26); // (target area - ta) * modfier
     }
     
   } else   //otherwise just drive if button 1 is not pressed
