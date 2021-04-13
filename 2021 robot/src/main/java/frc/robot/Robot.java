@@ -79,12 +79,12 @@ public class Robot extends TimedRobot {
    
   // IF we are pressing the trigger (button 1) we test vision
   if (joy1.getRawButton(1)) {
-    double dx = limeTable.getEntry("tx").getDouble(-1000);
-   
+    double dx = limeTable.getEntry("tx").getDouble(0);
+    double ta = limeTable.getEntry("ta").getDouble(0);
+
       lightMode.setNumber(3); // turn on LEDs
 
     System.out.println("Limeline Target X-Value:" + dx);
-
 
 
     //if no value do nothing
@@ -107,9 +107,10 @@ public class Robot extends TimedRobot {
       rightMotor.set(-0.3); 
     }else
       {
-        System.out.println("ON TARGET!");
-        leftMotor.set(0.3);
-        rightMotor.set(0.3);
+        System.out.println("ON TARGET!" );
+        leftMotor.set((20- ta)*0.26);
+        rightMotor.set((20- ta)*0.26);
+        System.out.println(ta);
     
   } }
   else
