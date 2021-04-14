@@ -86,9 +86,21 @@ public class Robot extends TimedRobot {
 
     System.out.println("Limeline Target X-Value:" + dx);
 
-
     //if no value do nothing
     
+    float KpDistance = -0.1f;
+
+    std::shared_ptr<limeTable> table = limeTable::GetTable("limelight");
+    float distance_error = table->GetNumber("ty");
+    
+    if (joystick->GetRawButton(9))
+    {
+            driving_adjust = KpDistance * distance_error;
+    
+            left_command += distance_adjust;
+            right_command += distance_adjust;
+    }
+
     if(dx == 0)
       {
         System.out.println("No target found on Limelight.");
