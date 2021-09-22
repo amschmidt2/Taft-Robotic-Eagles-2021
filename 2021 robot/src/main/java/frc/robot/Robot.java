@@ -131,8 +131,8 @@ public class Robot extends TimedRobot {
      }
 
 //driving and turn speed cap    
-    double speed = -joy1.getRawAxis(1) * 0.6;
-    double turn = -joy1.getRawAxis(0) * 0.3;
+    double speed = -joy1.getRawAxis(1) * -joy1.getRawAxis(1);
+    double turn = -joy1.getRawAxis(0) * -joy1.getRawAxis(0);
 
     double left = speed + turn;
     double right = speed - turn;
