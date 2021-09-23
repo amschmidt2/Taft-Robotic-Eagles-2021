@@ -130,14 +130,22 @@ public class Robot extends TimedRobot {
       arm.set(ControlMode.PercentOutput, 0);
      }
 
-//driving and turn speed cap    
-    double speed = -joy1.getRawAxis(1) * -joy1.getRawAxis(1);
-    double turn = -joy1.getRawAxis(0) * -joy1.getRawAxis(0);
 
-//drive train control
-    drivechain.arcadeDrive(speed, turn);
-    System.out.println("arcade drive speed: "+speed+", turn: "+turn);
+     // this is arcade drive.
+// //driving and turn speed cap    
+//     double speed = -joy1.getRawAxis(1) * -joy1.getRawAxis(1);
+//     double turn = -joy1.getRawAxis(0) * -joy1.getRawAxis(0);
 
+// //drive train control
+//     drivechain.arcadeDrive(speed, turn);
+//     System.out.println("arcade drive speed: "+speed+", turn: "+turn);
+
+
+    // this is tank drive
+    double left = Math.pow(-joy1.getRawAxis(1), 2.0);
+    double right = Math.pow(-joy2.getRawAxis(1), 2.0);
+    driveChain.tankDrive(left, right);
+    System.out.println("tank drive left: "+left+", right:"+right);
 
 //when intaking balls set the arm to turn toward the ground
  //   if (joy1.getRawAxis(3) < 0.0){
