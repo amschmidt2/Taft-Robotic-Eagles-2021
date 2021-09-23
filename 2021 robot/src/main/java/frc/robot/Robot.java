@@ -136,7 +136,7 @@ public class Robot extends TimedRobot {
 
 //drive train control
     drivechain.arcadeDrive(speed, turn);
-    System.out.println("tank leftdrive speed: "+speed+", turn: "+turn);
+    System.out.println("arcade drive speed: "+speed+", turn: "+turn);
 
 
 //when intaking balls set the arm to turn toward the ground
