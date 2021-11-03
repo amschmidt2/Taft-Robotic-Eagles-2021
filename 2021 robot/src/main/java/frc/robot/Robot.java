@@ -142,11 +142,24 @@ public class Robot extends TimedRobot {
 
 
     // this is tank drive
-    double left = Math.pow(-joy1.getRawAxis(1), 2.0);
-    double right = Math.pow(-joy2.getRawAxis(1), 2.0);
-    driveChain.tankDrive(left, right);
+    //double left = Math.pow(-joy1.getRawAxis(1), 2.0);
+    //double right = Math.pow(-joy2.getRawAxis(1), 2.0);
+    
+
+    double forwardReverse = -joy2.getRawAxis(1);
+    double leftRight = -joy2.getRawAxis(0);
+    double 
+
+    /// TODO: make the math to get the values
+    //check to make sure left and right vector is facing the right way 
+    // left = forwardReverse - leftRight
+    // right = forwardReverse + leftRight
+    double right = -joy2.getRawAxis(1); 
+    double left = -joy2.getRawAxis(1);
+    drivechain.tankDrive(left, right);
     System.out.println("tank drive left: "+left+", right:"+right);
 
+    System.out.println(joy2.getRawAxis(1));
 //when intaking balls set the arm to turn toward the ground
  //   if (joy1.getRawAxis(3) < 0.0){
    //     arm.set(ControlMode.PercentOutput,-.1);
