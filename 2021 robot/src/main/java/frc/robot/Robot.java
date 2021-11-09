@@ -52,8 +52,8 @@ public class Robot extends TimedRobot {
   private DifferentialDrive drivechain = new DifferentialDrive(leftMotor, rightMotor);
 
 //Joystick
-  private Joystick joy1 = new Joystick(0);
-  private Joystick joy2 = new Joystick(1);
+  private Joystick joy0 = new Joystick(0);
+  private Joystick joy1 = new Joystick(1);
 
   //private double startTime;
 
@@ -85,10 +85,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    boolean shooterspeed0 = joy2.getRawButton(1); // xbox A
-    boolean shooterspeed1 = joy2.getRawButton(2); // xbox B
-    boolean shooterspeed2 = joy2.getRawButton(3); // xbox X
-    boolean shooterspeed3 = joy2.getRawButton(4); // xbox Y
+    boolean shooterspeed0 = joy0.getRawButton(1); // xbox A
+    boolean shooterspeed1 = joy0.getRawButton(2); // xbox B
+    boolean shooterspeed2 = joy0.getRawButton(3); // xbox X
+    boolean shooterspeed3 = joy0.getRawButton(4); // xbox Y
 
     boolean arm_up = joy1.getRawButton(3); // xbox A
     boolean arm_down = joy1.getRawButton(2); //xbox X
@@ -133,8 +133,8 @@ public class Robot extends TimedRobot {
 
      // this is arcade drive.
 // //driving and turn speed cap    
-//     double speed = -joy1.getRawAxis(1) * -joy1.getRawAxis(1);
-//     double turn = -joy1.getRawAxis(0) * -joy1.getRawAxis(0);
+//     double speed = -joy0.getRawAxis(1) * -joy0.getRawAxis(1);
+//     double turn = -joy0.getRawAxis(0) * -joy0.getRawAxis(0);
 
 // //drive train control
 //     drivechain.arcadeDrive(speed, turn);
@@ -142,16 +142,20 @@ public class Robot extends TimedRobot {
 
 
     // this is tank drive
-    double left = Math.pow(-joy1.getRawAxis(1), 2.0);
-    double right = Math.pow(-joy2.getRawAxis(1), 2.0);
-    driveChain.tankDrive(left, right);
+    double left = Math.pow(-joy0.getRawAxis(2), 2.0);
+    double right = Math.pow(-joy0.getRawAxis(1), 2.0);
+    drivechain.tankDrive(left, right);
     System.out.println("tank drive left: "+left+", right:"+right);
-
+     
+    //double left = Math.pow(-joy0.getRawAxis(2), 2.0);
+    //double right = Math.pow(-joy0.getRawAxis(1), 2.0);
+    //drivechain.tankDrive(left, right);
+    //System.out.println("tank drive left: "+left+", right:"+right);
 //when intaking balls set the arm to turn toward the ground
- //   if (joy1.getRawAxis(3) < 0.0){
-   //     arm.set(ControlMode.PercentOutput,-.1);
+    if (joy0.getRawAxis(3) < 0.0){
+       arm.set(ControlMode.PercentOutput,-.1);
 
- //   }
+  }
 
 //control the arm up and down
     if (arm_up){
