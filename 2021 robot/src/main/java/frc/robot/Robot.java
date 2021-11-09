@@ -8,7 +8,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-//import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Timer;
 
 import edu.wpi.first.wpilibj.PWMSparkMax;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -69,6 +69,18 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     //startTime = Timer.getFPGATimestamp();
+    Timer timer;
+    timer = new Timer();
+    System.out.println("Start autonomous");
+    System.out.println("Reseting Timer");
+    timer.reset();
+    System.out.println("Timer Starting");
+    timer.start();
+    System.out.println("current time is: " + timer.get());
+    while(timer.get() < .5){
+      System.out.println("Timer status");
+    }
+    System.out.println("Done");
   }
 
   @Override
