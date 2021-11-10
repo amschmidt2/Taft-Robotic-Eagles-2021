@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 
 import edu.wpi.first.wpilibj.PWMSparkMax;
+import edu.wpi.first.wpilibj.PWMVictorSPX;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
@@ -39,6 +41,9 @@ public class Robot extends TimedRobot {
 
   private PWMSparkMax leftshooter = new PWMSparkMax(0);
   private PWMSparkMax rightshooter = new PWMSparkMax(1);
+ // private PWMVictorSPX leftWinch = new PWMVictorSPX(2);
+ // private PWMVictorSPX rightWinch = new PWMVictorSPX(3);
+  private PWMVictorSPX elevator = new PWMVictorSPX(2);
 
   private VictorSPX arm = new VictorSPX(4);
 
@@ -104,12 +109,18 @@ public class Robot extends TimedRobot {
 
     boolean arm_up = joy1.getRawButton(3); // xbox A
     boolean arm_down = joy1.getRawButton(2); //xbox X
-    boolean conveyorup = joy1.getRawButton(4); //UNKNOWN
-    boolean conveyordown = joy1.getRawButton(1); //UNKNOWN
+    boolean conveyorup = joy0.getRawButton(4); //UNKNOWN
+    boolean conveyordown = joy0.getRawButton(1); //UNKNOWN
     boolean intake_in = joy1.getRawButton(5);
-    boolean intake_out = joy1.getRawButton(8);
+    boolean intake_out = joy1.getRawButton(6);
+    //boolean rightWinch = joy0.getRawButton(7);
+    //boolean leftWinch = joy0.getRawButton(8);
+    
+    boolean elevator_Up = joy1.getRawButton(2);
+    boolean elevator_Down = joy1.getRawButton(1);
 
-
+    // For joy1 be careful of the Y(4) button it is a bit sticky
+    //boolean elevator_Up = joy1.getPOV(0); Want to use the D.pad to move the elevator up and down
 // Runs the Conveyor
     if (conveyorup) {
       conveyer1.set(ControlMode.PercentOutput, -.5);
@@ -141,8 +152,20 @@ public class Robot extends TimedRobot {
       intake.set(ControlMode.PercentOutput, 0);
       arm.set(ControlMode.PercentOutput, 0);
      }
+// Elevator moving up and down for the joysticks
+     if (elevator_Up){
+      elevator.set(.3);
+     }
 
+     else  if (elevator_Down){
+       elevator.set(-.1);
+     }
+     else {
+      elevator.set(0);
 
+     }
+     
+     
      // this is arcade drive.
 // //driving and turn speed cap    
 //     double speed = -joy0.getRawAxis(1) * -joy0.getRawAxis(1);
