@@ -169,6 +169,7 @@ public class Robot extends TimedRobot {
        winch_Down.set(-.4);
      }     
      
+     // boolean would be Up and Down, PWMVictor would be left and right (if, else if, else)
      // this is arcade drive.
 // //driving and turn speed cap    
 //     double speed = -joy0.getRawAxis(1) * -joy0.getRawAxis(1);
