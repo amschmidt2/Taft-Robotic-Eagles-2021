@@ -41,8 +41,8 @@ public class Robot extends TimedRobot {
 
   private PWMSparkMax leftshooter = new PWMSparkMax(0);
   private PWMSparkMax rightshooter = new PWMSparkMax(1);
- // private PWMVictorSPX leftWinch = new PWMVictorSPX(2);
- // private PWMVictorSPX rightWinch = new PWMVictorSPX(3);
+  private PWMVictorSPX winch_Up = new PWMVictorSPX(4);
+  private PWMVictorSPX winch_Down = new PWMVictorSPX(3);
   private PWMVictorSPX elevator = new PWMVictorSPX(2);
 
   private VictorSPX arm = new VictorSPX(4);
@@ -113,9 +113,8 @@ public class Robot extends TimedRobot {
     boolean conveyordown = joy0.getRawButton(1); //UNKNOWN
     boolean intake_in = joy1.getRawButton(5);
     boolean intake_out = joy1.getRawButton(6);
-    //boolean rightWinch = joy0.getRawButton(7);
-    //boolean leftWinch = joy0.getRawButton(8);
-    
+    boolean winch_Up = joy0.getRawButton(7);
+    boolean winch_Down = joy0.getRawButton(8);
     boolean elevator_Up = joy1.getRawButton(2);
     boolean elevator_Down = joy1.getRawButton(1);
 
@@ -135,7 +134,7 @@ public class Robot extends TimedRobot {
     else {
       conveyer1.set(ControlMode.PercentOutput, 0);
       conveyer2.set(ControlMode.PercentOutput, 0);
-    }
+     }
 
 //set intake to left and right trigger   
      if (intake_in){
@@ -152,7 +151,7 @@ public class Robot extends TimedRobot {
       intake.set(ControlMode.PercentOutput, 0);
       arm.set(ControlMode.PercentOutput, 0);
      }
-// Elevator moving up and down for the joysticks
+// elevator moving up and down for the joysticks
      if (elevator_Up){
       elevator.set(.3);
      }
@@ -164,7 +163,11 @@ public class Robot extends TimedRobot {
       elevator.set(0);
 
      }
-     
+     //making the winch turn :)
+     if (winch_Up) {
+       winch_Up.set(.4);
+       winch_Down.set(-.4);
+     }     
      
      // this is arcade drive.
 // //driving and turn speed cap    
