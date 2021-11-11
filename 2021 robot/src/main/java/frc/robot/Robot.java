@@ -41,8 +41,8 @@ public class Robot extends TimedRobot {
 
   private PWMSparkMax leftshooter = new PWMSparkMax(0);
   private PWMSparkMax rightshooter = new PWMSparkMax(1);
-  private PWMVictorSPX winch_Up = new PWMVictorSPX(4);
-  private PWMVictorSPX winch_Down = new PWMVictorSPX(3);
+  private PWMVictorSPX leftWinch = new PWMVictorSPX(4);
+  private PWMVictorSPX rightWinch = new PWMVictorSPX(3);
   private PWMVictorSPX elevator = new PWMVictorSPX(2);
 
   private VictorSPX arm = new VictorSPX(4);
@@ -164,10 +164,20 @@ public class Robot extends TimedRobot {
 
      }
      //making the winch turn :)
-     if (winch_Up) {
+     if (leftWinch) {
        winch_Up.set(.4);
        winch_Down.set(-.4);
      }     
+
+     else if (rightWinch) {
+       winch_Up.set(.4);
+       winch_Down.set(-.4);
+     }
+
+     else {
+       rightWinch(0);
+       leftWinch(0);
+     }
      
      // boolean would be Up and Down, PWMVictor would be left and right (if, else if, else)
      // this is arcade drive.
