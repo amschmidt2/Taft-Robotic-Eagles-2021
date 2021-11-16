@@ -76,6 +76,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    Double shooterSpeed = .5;
+    Double conveyerTime = 10.0;
+    Double spinUp = 5.0;  //Shooter spin up time
+    Double moveRobotTime = 3.0;
     //startTime = Timer.getFPGATimestamp();
     Timer timer;
     timer = new Timer();
@@ -89,6 +93,33 @@ public class Robot extends TimedRobot {
       System.out.println("Timer status");
     }
     System.out.println("Done");
+    //starting shooter
+    leftshooter.set(-shooterSpeed);
+    rightshooter.set(shooterSpeed);
+    timer.reset();
+    timer.start();
+    while(timer.get() < spinUp){
+      System.out.println("Waiting for spin up");
+    }
+    //Conveyer starts going up
+    conveyer1.set(ControlMode.PercentOutput, -.5);
+    conveyer2.set(ControlMode.PercentOutput, .5);
+    timer.reset();
+    timer.start();
+    while(timer.get() < conveyerTime){
+      System.out.println("Waiting for ammo");
+    }
+    conveyer1.set(ControlMode.PercentOutput, 0);
+    conveyer2.set(ControlMode.PercentOutput, 0);
+    leftshooter.set(0);
+    rightshooter.set(0);
+    //Move robot robot foward for more points
+    //put move robot code here
+    Double timerHelper = timer.get() + moveRobotTime;
+    while(timer.get() < timerHelper){
+      System.out.println("Moving robot");
+    }
+    //turn wheels off
   }
 
   @Override
@@ -232,25 +263,25 @@ public class Robot extends TimedRobot {
     double flywheelstop = 0; //flywheel speed
 
     if (shooterspeed0) {
-      leftshooter.set(flywheel0);
+      leftshooter.set(-flywheel0);
       rightshooter.set(flywheel0);
       System.out.println("Speed: " + flywheel0);
     }
 
     else if (shooterspeed1) {
-      leftshooter.set(flywheel1);
+      leftshooter.set(-flywheel1);
       rightshooter.set(flywheel1);
       System.out.println("Speed: " + flywheel1);
     }
 
     else if (shooterspeed2) {
-      leftshooter.set(flywheel2);
+      leftshooter.set(-flywheel2);
       rightshooter.set(flywheel2);
       System.out.println("Speed: " + flywheel2);
     }
 
     else if (shooterspeed3) {
-      leftshooter.set(flywheel3);
+      leftshooter.set(-flywheel3);
       rightshooter.set(flywheel3);
       System.out.println("Speed: " + flywheel3);
     }
