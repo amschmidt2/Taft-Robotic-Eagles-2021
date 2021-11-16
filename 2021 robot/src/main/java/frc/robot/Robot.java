@@ -41,8 +41,11 @@ public class Robot extends TimedRobot {
 
   private PWMSparkMax leftshooter = new PWMSparkMax(0);
   private PWMSparkMax rightshooter = new PWMSparkMax(1);
+
+  // winch motors, pulls the base of the robot up and down
   private PWMVictorSPX leftWinch = new PWMVictorSPX(4);
   private PWMVictorSPX rightWinch = new PWMVictorSPX(3);
+
   private PWMVictorSPX elevator = new PWMVictorSPX(2);
 
   private VictorSPX arm = new VictorSPX(4);
@@ -111,13 +114,14 @@ public class Robot extends TimedRobot {
     boolean arm_down = joy1.getRawButton(2); //xbox X
     boolean conveyorup = joy0.getRawButton(4); //UNKNOWN
     boolean conveyordown = joy0.getRawButton(1); //UNKNOWN
-    boolean intake_in = joy1.getRawButton(5);
-    boolean intake_out = joy1.getRawButton(6);
-    boolean winch_Up = joy0.getRawButton(7);
-    boolean winch_Down = joy0.getRawButton(8);
-    boolean elevator_Up = joy1.getRawButton(2);
-    boolean elevator_Down = joy1.getRawButton(1);
+    boolean intake_in = joy1.getRawButton(5); // left bummper 
+    boolean intake_out = joy1.getRawButton(6); // right bummper 
+    boolean winchUp = joy0.getRawButton(7); // tiny two frames
+    boolean winchDown = joy0.getRawButton(8); // tiny three lines - - -
+    boolean elevator_Up = joy1.getRawButton(2); // Xbox B
+    boolean elevator_Down = joy1.getRawButton(1); // Xbox A
 
+    // seperate the two joy controls, comment out buttons that are not used :)
     // For joy1 be careful of the Y(4) button it is a bit sticky
     //boolean elevator_Up = joy1.getPOV(0); Want to use the D.pad to move the elevator up and down
 // Runs the Conveyor
@@ -164,19 +168,19 @@ public class Robot extends TimedRobot {
 
      }
      //making the winch turn :)
-     if (leftWinch) {
-       winch_Up.set(.4);
-       winch_Down.set(-.4);
+     if (winchUp) {
+       leftWinch.set(.4);
+       rightWinch.set(-.4);
      }     
 
-     else if (rightWinch) {
-       winch_Up.set(.4);
-       winch_Down.set(-.4);
+     else if (winchDown) {
+       rightWinch.set(.4);
+       leftWinch.set(-.4);
      }
 
      else {
-       rightWinch(0);
-       leftWinch(0);
+       rightWinch.set(0);
+       leftWinch.set(0);
      }
      
      // boolean would be Up and Down, PWMVictor would be left and right (if, else if, else)
