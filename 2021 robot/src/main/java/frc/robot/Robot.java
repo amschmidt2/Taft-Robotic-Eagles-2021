@@ -238,19 +238,19 @@ public class Robot extends TimedRobot {
      // boolean would be Up and Down, PWMVictor would be left and right (if, else if, else)
      // this is arcade drive.
 // //driving and turn speed cap    
-//     double speed = -joy0.getRawAxis(1) * -joy0.getRawAxis(1);
-//     double turn = -joy0.getRawAxis(0) * -joy0.getRawAxis(0);
+ double speed = -joy0.getRawAxis(2) * -joy0.getRawAxis(2);
+      double turn = -joy0.getRawAxis(1) * -joy0.getRawAxis(1);
 
 // //drive train control
-//     drivechain.arcadeDrive(speed, turn);
-//     System.out.println("arcade drive speed: "+speed+", turn: "+turn);
+   drivechain.arcadeDrive(speed, turn);
+        System.out.println("arcade drive speed: "+speed+", turn: "+turn);
 
 
     // this is tank drive
-    double left = Math.pow(-joy0.getRawAxis(2), 2.0);
-    double right = Math.pow(-joy0.getRawAxis(1), 2.0);
-    drivechain.tankDrive(left, right);
-    System.out.println("tank drive left: "+left+", right:"+right);
+   // double left = Math.pow(-joy0.getRawAxis(2), 2.0);
+    //double right = Math.pow(-joy0.getRawAxis(1), 2.0);
+    //drivechain.tankDrive(left, right);
+    //System.out.println("tank drive left: "+left+", right:"+right);
      
     //double left = Math.pow(-joy0.getRawAxis(2), 2.0);
     //double right = Math.pow(-joy0.getRawAxis(1), 2.0);
