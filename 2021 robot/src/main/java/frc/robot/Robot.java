@@ -136,23 +136,44 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    boolean shooterspeed0 = joy0.getRawButton(1); // xbox A
-    boolean shooterspeed1 = joy0.getRawButton(2); // xbox B
-    boolean shooterspeed2 = joy0.getRawButton(3); // xbox X
-    boolean shooterspeed3 = joy0.getRawButton(4); // xbox Y
-
-    boolean arm_up = joy1.getRawButton(3); // xbox A
-    boolean arm_down = joy1.getRawButton(2); //xbox X
+    // joystick controller #0
     boolean conveyorup = joy0.getRawButton(4); //UNKNOWN
-    boolean conveyordown = joy0.getRawButton(1); //UNKNOWN
+    boolean conveyordown = joy0.getRawButton(1); //UNKNOWN 
+    boolean winchUp = joy0.getRawButton(7); // TTF
+    boolean winchDown = joy0.getRawButton(8); // T3L
+
+    // joystick controller #1
+    boolean arm_up = joy1.getRawButton(4); // xbox Y
+    boolean arm_down = joy1.getRawButton(1); //xbox A
+    boolean elevator_Up = joy1.getRawButton(3); // Xbox X
+    boolean elevator_Down = joy1.getRawButton(2); // Xbox B
     boolean intake_in = joy1.getRawButton(5); // left bummper 
     boolean intake_out = joy1.getRawButton(6); // right bummper 
-    boolean winchUp = joy0.getRawButton(7); // tiny two frames
-    boolean winchDown = joy0.getRawButton(8); // tiny three lines - - -
-    boolean elevator_Up = joy1.getRawButton(2); // Xbox B
-    boolean elevator_Down = joy1.getRawButton(1); // Xbox A
+    
 
-    // seperate the two joy controls, comment out buttons that are not used :)
+    // Xbox A, B, Y, X, tiny two frames (TTF.), tiny three line(T3L), Dpad, Right Bummper, Left Bummper, Right Trigger, Left Trigger, Top Joystick, Bottom Joystick
+    // This was the shooter speed these are not things to look at buttons wise. 
+    //boolean shooterspeed0 = joy0.getRawButton(1); // xbox A
+    //boolean shooterspeed1 = joy0.getRawButton(2); // xbox B
+    //boolean shooterspeed2 = joy0.getRawButton(3); // xbox X
+    //boolean shooterspeed3 = joy0.getRawButton(4); // xbox Y
+
+    //Here are the different buttons that could be used for Joystick controller 0:
+// boolean nothing = joy0.getRawButton(); // Xbox Y
+// boolean nothing = joy0.getRawButton(); // Xbox B
+// boolean nothing = joy0.getRawButton(); // Xbox A
+// boolean nothing = joy0.getRawButton(); // Xbox x
+// boolean nothing = joy0.getRawButton(); // Right Bummper 
+// boolean nothing = joy0.getRawButton(); // Left Bummper 
+// boolean nothing = joy0.getRawButton(); // Right Trigger 
+// boolean nothing = joy0.getRawButton(); // Left Trigger 
+
+    // Here are the different buttons that could be used for Joystick controller 1:
+// boolean nothing = joy1.getRawButton(); // TTF
+// boolean nothing = joy1.getRawButton(); // T3L
+// boolean nothing = joy1.getRawButton(); // Right Trigger 
+// boolean nothing = joy1.getRawButton(); // Left Trigger 
+
     // For joy1 be careful of the Y(4) button it is a bit sticky
     //boolean elevator_Up = joy1.getPOV(0); Want to use the D.pad to move the elevator up and down
 // Runs the Conveyor
@@ -253,44 +274,44 @@ public class Robot extends TimedRobot {
     else {
       arm.set(ControlMode.PercentOutput, 0);
     }
-
-//when the shooter is pressed it powers at 0.50, or 50%; 0.55, or 55%; 0.60, or 60%; 0.65, or 65%
-    double flywheel0 = 0.45; //flywheel speed 45% Between E5 and E6 45%
-    double flywheel1 = 0.48; //flywheel speed 48% Between E6 and E7 48%
-    double flywheel2 = 0.50; //flywheel speed 50% Between E2 and E3 50%
-    double flywheel3 = 0.52; //flywheel speed 52% E9 52%
-
-    double flywheelstop = 0; //flywheel speed
-
-    if (shooterspeed0) {
-      leftshooter.set(-flywheel0);
-      rightshooter.set(flywheel0);
-      System.out.println("Speed: " + flywheel0);
-    }
-
-    else if (shooterspeed1) {
-      leftshooter.set(-flywheel1);
-      rightshooter.set(flywheel1);
-      System.out.println("Speed: " + flywheel1);
-    }
-
-    else if (shooterspeed2) {
-      leftshooter.set(-flywheel2);
-      rightshooter.set(flywheel2);
-      System.out.println("Speed: " + flywheel2);
-    }
-
-    else if (shooterspeed3) {
-      leftshooter.set(-flywheel3);
-      rightshooter.set(flywheel3);
-      System.out.println("Speed: " + flywheel3);
-    }
-   
-    else {
-      leftshooter.set(flywheelstop);
-      rightshooter.set(flywheelstop);
-    }
   }
+//when the shooter is pressed it powers at 0.50, or 50%; 0.55, or 55%; 0.60, or 60%; 0.65, or 65%
+   // double flywheel0 = 0.45; //flywheel speed 45% Between E5 and E6 45%
+   // double flywheel1 = 0.48; //flywheel speed 48% Between E6 and E7 48%
+   // double flywheel2 = 0.50; //flywheel speed 50% Between E2 and E3 50%
+   // double flywheel3 = 0.52; //flywheel speed 52% E9 52%
+
+   // double flywheelstop = 0; //flywheel speed
+
+  //  if (shooterspeed0) {
+  //    leftshooter.set(-flywheel0);
+  //    rightshooter.set(flywheel0);
+  //    System.out.println("Speed: " + flywheel0);
+  //  }
+
+   // else if (shooterspeed1) {
+  //    leftshooter.set(-flywheel1);
+  //    rightshooter.set(flywheel1);
+  //    System.out.println("Speed: " + flywheel1);
+   // }
+
+  //  else if (shooterspeed2) {
+  //    leftshooter.set(-flywheel2);
+  //    rightshooter.set(flywheel2);
+  //    System.out.println("Speed: " + flywheel2);
+   // }
+
+   // else if (shooterspeed3) {
+  //    leftshooter.set(-flywheel3);
+  //    rightshooter.set(flywheel3);
+  //    System.out.println("Speed: " + flywheel3);
+   // }
+   
+   // else {
+  //    leftshooter.set(flywheelstop);
+  //    rightshooter.set(flywheelstop);
+  //  }
+ // }
 
   @Override
   public void disabledInit() {}
