@@ -66,3 +66,6 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {}
 }
+
+//Create a if, else if, if statement in order to program the arm for the mini robot.
+//You are able to change code between the big robot and the mini robot in order to program right
