@@ -76,7 +76,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    Double shooterSpeed = .5;
+    Double shooterSpeed = .4;
     Double conveyerTime = 10.0;
     Double spinUp = 5.0;  //Shooter spin up time
     Double moveRobotTime = 3.0;
