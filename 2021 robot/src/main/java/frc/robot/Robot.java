@@ -94,7 +94,7 @@ public class Robot extends TimedRobot {
     }
     System.out.println("Done");
     //starting shooter
-    leftshooter.set(-shooterSpeed);
+    leftshooter.set(shooterSpeed*-1);
     rightshooter.set(shooterSpeed);
     timer.reset();
     timer.start();
@@ -238,8 +238,8 @@ public class Robot extends TimedRobot {
      // boolean would be Up and Down, PWMVictor would be left and right (if, else if, else)
      // this is arcade drive.
 // //driving and turn speed cap    
- double speed = -joy0.getRawAxis(2) * -joy0.getRawAxis(2);
-      double turn = -joy0.getRawAxis(1) * -joy0.getRawAxis(1);
+ double speed = joy0.getRawAxis(1);
+      double turn = joy0.getRawAxis(0);
 
 // //drive train control
    drivechain.arcadeDrive(speed, turn);
