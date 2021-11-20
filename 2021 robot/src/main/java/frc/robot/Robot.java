@@ -56,6 +56,19 @@ public class Robot extends TimedRobot {
 
     leftMotor.set(left);
     rightMotor.set(right);
+
+//arm controls 
+    if (arm_up){
+      arm.set(ControlMode.PercentOutput, .3);
+    }
+    
+    else if (arm_down){
+      arm.set(ControlMode.PercentOutput, -.3);
+    }
+    
+    else {
+      arm.set(ControlMode.PercentOutput, 0);
+    }
   }
 
   @Override
@@ -71,21 +84,6 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {}
 
 }
-
-
-// arm code for mini bot
-if (arm_up){
-  arm.set(ControlMode.PercentOutput, .3);
-}
-
-else if (arm_down){
-  arm.set(ControlMode.PercentOutput, -.3);
-}
-
-else {
-  arm.set(ControlMode.PercentOutput, 0);
-}
-
 
 
 //Create a if, else if, else statement in order to program the arm for the mini robot.
