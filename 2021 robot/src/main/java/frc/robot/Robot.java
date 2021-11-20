@@ -22,8 +22,12 @@ public class Robot extends TimedRobot {
 
   private Jaguar leftMotor = new Jaguar(0);
   private Jaguar rightMotor = new Jaguar(1);
+  private Jaguar arm = new Jaguar(2);
 
   private Joystick joy1 = new Joystick(0);
+
+  boolean arm_up = joy1.getRawButton(1);
+  boolean arm_down = joy1.getRawButton(2);
 
   @Override
   public void robotInit() {}
@@ -65,7 +69,24 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {}
+
 }
 
-//Create a if, else if, if statement in order to program the arm for the mini robot.
+
+// arm code for mini bot
+if (arm_up){
+  arm.set(ControlMode.PercentOutput, .3);
+}
+
+else if (arm_down){
+  arm.set(ControlMode.PercentOutput, -.3);
+}
+
+else {
+  arm.set(ControlMode.PercentOutput, 0);
+}
+
+
+
+//Create a if, else if, else statement in order to program the arm for the mini robot.
 //You are able to change code between the big robot and the mini robot in order to program right
