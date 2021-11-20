@@ -59,15 +59,15 @@ public class Robot extends TimedRobot {
 
 //arm controls 
     if (arm_up){
-      arm.set(ControlMode.PercentOutput, .3);
+      arm.set(.3);
     }
     
     else if (arm_down){
-      arm.set(ControlMode.PercentOutput, -.3);
+      arm.set(-.3);
     }
     
     else {
-      arm.set(ControlMode.PercentOutput, 0);
+      arm.set(0);
     }
   }
 
