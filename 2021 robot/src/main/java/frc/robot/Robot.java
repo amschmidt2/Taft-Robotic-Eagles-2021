@@ -7,6 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -22,7 +25,9 @@ public class Robot extends TimedRobot {
 
   private Jaguar leftMotor = new Jaguar(0);
   private Jaguar rightMotor = new Jaguar(1);
-  private Jaguar arm = new Jaguar(2);
+  //private Jaguar arm = new Jaguar(2);
+
+  private DoubleSolenoid canCrush = new DoubleSolenoid(1,2);
 
   private Joystick joy1 = new Joystick(0);
 
@@ -44,6 +49,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     rightMotor.setInverted(true);
+    canCrush.set(kReverse);
   }
 
   @Override
@@ -57,8 +63,15 @@ public class Robot extends TimedRobot {
     leftMotor.set(left);
     rightMotor.set(right);
 
+    if (joy1.getRawButton(3)){
+      canCrush.toggle();
+    }
+    else{
+      canCrush.set(kReverse);
+    }
+
 //arm controls 
-    if (arm_up){
+ /*   if (arm_up){
       arm.set(.3);
     }
     
@@ -68,7 +81,7 @@ public class Robot extends TimedRobot {
     
     else {
       arm.set(0);
-    }
+     }*/
   }
 
   @Override
@@ -83,8 +96,10 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {}
 
-}
+
 
 
 //Create a if, else if, else statement in order to program the arm for the mini robot.
 //You are able to change code between the big robot and the mini robot in order to program right
+
+}
