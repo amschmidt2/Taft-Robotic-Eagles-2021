@@ -24,10 +24,10 @@ public class Robot extends TimedRobot {
   private Jaguar rightMotor = new Jaguar(1);
   private Jaguar arm = new Jaguar(2);
 
-  private Joystick joy1 = new Joystick(0);
+  private Joystick joy0 = new Joystick(0);
 
-  boolean arm_up = joy1.getRawButton(1);
-  boolean arm_down = joy1.getRawButton(2);
+  boolean arm_up = joy0.getRawButton(1);
+  boolean arm_down = joy0.getRawButton(2);
 
   @Override
   public void robotInit() {}
@@ -48,8 +48,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    double speed = -joy1.getRawAxis(1) * 0.6;
-    double turn = -joy1.getRawAxis(0) * 0.3;
+    double speed = -joy0.getRawAxis(1) * 0.6;
+    double turn = -joy0.getRawAxis(0) * 0.3;
 
     double left = speed + turn;
     double right = speed - turn;
