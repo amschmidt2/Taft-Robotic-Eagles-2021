@@ -79,7 +79,8 @@ public class Robot extends TimedRobot {
     Double shooterSpeed = .4;
     Double conveyerTime = 10.0;
     Double spinUp = 5.0;  //Shooter spin up time
-    Double moveRobotTime = 3.0;
+    Double moveRobotTime = 10.0;
+    Double moveRobotSpeed = 1.0;
     //startTime = Timer.getFPGATimestamp();
     Timer timer;
     timer = new Timer();
@@ -93,6 +94,16 @@ public class Robot extends TimedRobot {
       System.out.println("Timer status");
     }
     System.out.println("Done");
+    leftMotor.set(moveRobotSpeed*-1);
+    rightMotor.set(moveRobotSpeed);
+    Double timerHelper = timer.get() + moveRobotTime;
+    while(timer.get() < timerHelper){
+      System.out.println("Moving robot");
+    }
+    //turn wheels off
+    leftMotor.set(0);
+    rightMotor.set(0);
+
     //starting shooter
     leftshooter.set(shooterSpeed*-1);
     rightshooter.set(shooterSpeed);
@@ -115,11 +126,7 @@ public class Robot extends TimedRobot {
     rightshooter.set(0);
     //Move robot robot foward for more points
     //put move robot code here
-    Double timerHelper = timer.get() + moveRobotTime;
-    while(timer.get() < timerHelper){
-      System.out.println("Moving robot");
-    }
-    //turn wheels off
+    
   }
 
   @Override
