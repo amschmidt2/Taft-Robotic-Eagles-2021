@@ -144,14 +144,16 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     // joystick controller #0
+
+
     boolean conveyorup = joy0.getRawButton(4); //UNKNOWN
     boolean conveyordown = joy0.getRawButton(1); //UNKNOWN 
     boolean winchUp = joy0.getRawButton(7); // TTF
     boolean winchDown = joy0.getRawButton(8); // T3L
 
     // joystick controller #1
-    boolean arm_up = joy1.getRawButton(4); // xbox Y
-    boolean arm_down = joy1.getRawButton(1); //xbox A
+    boolean arm_up = joy1.getRawButton(4); // xbox A
+    boolean arm_down = joy1.getRawButton(1); //xbox Y
     boolean elevator_Up = joy1.getRawButton(3); // Xbox X
     boolean elevator_Down = joy1.getRawButton(2); // Xbox B
     boolean intake_in = joy1.getRawButton(5); // left bummper 
@@ -245,8 +247,15 @@ public class Robot extends TimedRobot {
      // boolean would be Up and Down, PWMVictor would be left and right (if, else if, else)
      // this is arcade drive.
 // //driving and turn speed cap    
- double speed = joy0.getRawAxis(1);
-      double turn = joy0.getRawAxis(0);
+double speed = joy0.getRawAxis(1);
+// double turn = joy0.getRawAxis(0);
+
+
+double turn_raw = joy0.getRawAxis(0);
+double turn = Math.pow(turn_raw, 2.0);
+if (turn_raw < 0){
+  turn = -turn;
+}
 
 // //drive train control
    drivechain.arcadeDrive(speed, turn);
