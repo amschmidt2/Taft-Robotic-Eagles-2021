@@ -27,12 +27,19 @@ public class Robot extends TimedRobot {
   private Jaguar rightMotor = new Jaguar(1);
   //private Jaguar arm = new Jaguar(2);
 
-  private DoubleSolenoid canCrush = new DoubleSolenoid(1,2);
+  private DoubleSolenoid canCrush = new DoubleSolenoid(0,1);
 
   private Joystick joy0 = new Joystick(0);
 
   boolean arm_up = joy0.getRawButton(1);
   boolean arm_down = joy0.getRawButton(2);
+  boolean Crush = joy0.getRawButton(3);
+  boolean crushOff = joy0.getRawButton(4);
+
+// The canCrush drops about 30psi everytime it is released
+// It takes x seconds to crush the can
+// How long it takes 40 sec. for it to get to 110psi untill it stops
+
 
   @Override
   public void robotInit() {}
@@ -64,12 +71,16 @@ public class Robot extends TimedRobot {
     rightMotor.set(right);
 
     if (joy0.getRawButton(3)){
-      canCrush.toggle();
+      canCrush.set(kForward);
     }
-    else{
+    else if (joy0.getRawButton(4)){
       canCrush.set(kReverse);
     }
 
+    else{
+      canCrush.set(kOff);
+    }
+    
 //arm controls 
  /*   if (arm_up){
       arm.set(.3);
