@@ -150,6 +150,8 @@ public class Robot extends TimedRobot {
     boolean conveyordown = joy0.getRawButton(1); //UNKNOWN 
     boolean winchUp = joy0.getRawButton(7); // TTF
     boolean winchDown = joy0.getRawButton(8); // T3L
+    boolean shooterOut = joy0.getRawButton(6); // right trigger
+    
 
     // joystick controller #1
     boolean arm_up = joy1.getRawButton(4); // xbox A
@@ -243,7 +245,16 @@ public class Robot extends TimedRobot {
        rightWinch.set(0);
        leftWinch.set(0);
      }
-     
+// Shooter button
+      if (shooterOut) {
+        leftshooter.set(.4);
+        rightshooter.set(.4);
+      }
+
+      else {
+        leftshooter.set(0);
+        rightshooter.set(0);
+      }
      // boolean would be Up and Down, PWMVictor would be left and right (if, else if, else)
      // this is arcade drive.
 // //driving and turn speed cap    
