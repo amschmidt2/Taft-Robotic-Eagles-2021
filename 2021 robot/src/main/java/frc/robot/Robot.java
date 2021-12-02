@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.Timer;
+
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -32,7 +34,28 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {}
 
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+    Timer timer;
+    timer = new Timer();
+    System.out.println("start autonomous");
+    Sytem.out.println("Reseting timer");
+    timer.reset();
+    System.out.println("Timer starting");
+    timer.start();
+    System.out.println("current time is: " + timer.get());
+    while(timer.get() < .5){
+      System.out.println("timer status");
+    }
+    System.out.println("done");
+    leftMotor.set(MoveRobotSpeed*-1);
+    rightMotor.set(MoveRobotSpeed);
+    Double timerHelper = timer.get() + MoveRobotTime;
+    while(timer.get() < timerHelper){
+      System.out.println("Moving Robot");
+    }
+    leftMotor.set(0);
+    rightMotor.set(0);
+  }
 
   @Override
   public void autonomousPeriodic() {}
