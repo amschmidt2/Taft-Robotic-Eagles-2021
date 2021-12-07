@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import java.util.Timer;
+// import java.util.Timer;
 
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
@@ -28,8 +28,8 @@ public class Robot extends TimedRobot {
 
   private Joystick joy0 = new Joystick(0);
 
-  boolean arm_up = joy0.getRawButton(1);
-  boolean arm_down = joy0.getRawButton(2);
+  
+  //double arm_down = joy0.getRawAxis(-1);
 
   @Override
   public void robotInit() {}
@@ -39,26 +39,26 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    Timer timer;
-    timer = new Timer();
-    System.out.println("start autonomous");
-    Sytem.out.println("Reseting timer");
-    timer.reset();
-    System.out.println("Timer starting");
-    timer.start();
-    System.out.println("current time is: " + timer.get());
-    while(timer.get() < .5){
-      System.out.println("timer status");
-    }
-    System.out.println("done");
-    leftMotor.set(MoveRobotSpeed*-1);
-    rightMotor.set(MoveRobotSpeed);
-    Double timerHelper = timer.get() + MoveRobotTime;
-    while(timer.get() < timerHelper){
-      System.out.println("Moving Robot");
-    }
-    leftMotor.set(0);
-    rightMotor.set(0);
+    // Timer timer;
+    // timer = new Timer();
+    // System.out.println("start autonomous");
+    // Sytem.out.println("Reseting timer");
+    // timer.reset();
+    // System.out.println("Timer starting");
+    // timer.start();
+    // System.out.println("current time is: " + timer.get());
+    // while(timer.get() < .5){
+    //   System.out.println("timer status");
+    // }
+    // System.out.println("done");
+    // leftMotor.set(MoveRobotSpeed*-1);
+    // rightMotor.set(MoveRobotSpeed);
+    // Double timerHelper = timer.get() + MoveRobotTime;
+    // while(timer.get() < timerHelper){
+    //   System.out.println("Moving Robot");
+    // }
+    // leftMotor.set(0);
+    // rightMotor.set(0);
   }
 
   @Override
@@ -81,18 +81,28 @@ public class Robot extends TimedRobot {
     rightMotor.set(right);
 
 //arm controls 
-    if (arm_up){
-      arm.set(.3);
-    }
+    //if (arm_up){
+      //arm.set(.3);
+    //}
     
-    else if (arm_down){
-      arm.set(-.3);
-    }
+  //   else if (arm_down){
+  //     arm.set(-.3);
+  //   }
     
-    else {
-      arm.set(0);
-    }
+  //   else {
+  //     arm.set(0);
+  //   }
+  //6  makes arm speed slower
+  double arm_speed = 6.0;
+  double arm_stick = joy0.getRawAxis(4)/arm_speed;
+  //it tells the motor what code it would use to make the arm move
+  arm.set(arm_stick);
+
+  
+
   }
+  
+
 
   @Override
   public void disabledInit() {}
